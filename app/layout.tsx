@@ -1,4 +1,4 @@
-import "./globals.css";
+import "../styles/globals.css";
 import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/react";
 import Link from "next/link";
