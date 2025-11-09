@@ -1,1 +1,3 @@
-# Neeraja Portfolio\n\nCreated 2025-11-06\n
+Fixed Tailwind config. Run:
+
+npm install && npm run dev
