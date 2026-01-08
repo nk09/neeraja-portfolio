@@ -10,10 +10,15 @@ type DeepDive = {
   title: string;
   summary: string;
   whyItMatters: string[];
+  architecture?: string[];
   sharpEdges: string[];
   checklist: string[];
   commands: string[];
   snippets?: { label: string; code: string }[];
+  // Allow future expansion without failing Next.js type-checking on object literals.
+  // This prevents repeated Vercel build breaks when we add new fields like
+  // `architecture`, `tradeoffs`, `pitfalls`, etc.
+  [key: string]: unknown;
 };
 
 function titleFromSlug(slug: string): string {
@@ -193,6 +198,10 @@ export default function WorkflowDeepDivePage({ params }: Props) {
   const dd = WORKFLOWS[slug] || genericDeepDive(slug);
   const title = dd.title || titleFromSlug(slug);
 
+  const architecture = (dd.architecture ?? []) as string[];
+  const snippets = (dd.snippets ?? []) as { label: string; code: string }[];
+  const commands = dd.commands ?? [];
+
   const repoUrl = "https://github.com/nk09/neeraja-public-posts";
   const searchUrl = `${repoUrl}/search?q=${encodeURIComponent(slug)}`;
 
@@ -220,7 +229,7 @@ export default function WorkflowDeepDivePage({ params }: Props) {
           <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
             <h2 className="text-slate-200 font-semibold">Architecture pattern</h2>
             <ul className="mt-3 list-disc pl-5 text-slate-300 space-y-1">
-              {dd.architecture.map((x) => (
+              {architecture.map((x) => (
                 <li key={x}>{x}</li>
               ))}
             </ul>
@@ -247,7 +256,7 @@ export default function WorkflowDeepDivePage({ params }: Props) {
           <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
             <h2 className="text-slate-200 font-semibold">Copy/paste snippets</h2>
             <div className="mt-3 space-y-3">
-              {dd.commands.map((cmd) => (
+              {(snippets.length ? snippets.map((s) => s.code) : commands).map((cmd) => (
                 <pre
                   key={cmd}
                   className="whitespace-pre-wrap rounded-xl bg-black/40 border border-white/10 p-4 text-xs text-slate-200 font-mono"
