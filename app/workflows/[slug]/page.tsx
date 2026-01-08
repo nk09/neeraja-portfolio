@@ -10,10 +10,10 @@ type DeepDive = {
   title: string;
   summary: string;
   whyItMatters: string[];
-  architecture: string[];
   sharpEdges: string[];
   checklist: string[];
   commands: string[];
+  snippets?: { label: string; code: string }[];
 };
 
 function titleFromSlug(slug: string): string {
