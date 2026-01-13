@@ -22,7 +22,7 @@ export default async function OpenSourceIndex() {
     .reverse();
 
   return (
-    \1
+    <main className="max-w-5xl mx-auto px-4 py-10">
       <NavBar />
       <h1 className="text-3xl sm:text-4xl font-extrabold mb-3">Open Source Picks</h1>
       <p className="text-slate-300 mb-8">

@@ -4,15 +4,15 @@ import NavBar from "../components/NavBar";
 import Markdown from "../components/Markdown";
 import Link from "next/link";
 
-const ChatWidget = dynamic(() => import("../components/ChatWidget"), {{ ssr: false }});
+const ChatWidget = dynamic(() => import("../components/ChatWidget"), { ssr: false });
 
 const proof = [
-  {{ k: "Kubernetes", v: "EKS/GKE ops, upgrades, autoscaling, RBAC/IRSA" }},
-  {{ k: "Terraform", v: "Modules, remote state, CI gating, guardrails" }},
-  {{ k: "Kafka", v: "Consumer lag, partitions, DLQ, retries, safe rollouts" }},
-  {{ k: "Python", v: "Automation tooling for migration, validation, ops" }},
-  {{ k: "Observability", v: "Prometheus/Grafana/OTel, SLOs, alert hygiene" }},
-  {{ k: "Cloud", v: "AWS/GCP/Azure, HA design, security + cost controls" }},
+  { k: "Kubernetes", v: "EKS/GKE ops, upgrades, autoscaling, RBAC/IRSA" },
+  { k: "Terraform", v: "Modules, remote state, CI gating, guardrails" },
+  { k: "Kafka", v: "Consumer lag, partitions, DLQ, retries, safe rollouts" },
+  { k: "Python", v: "Automation tooling for migration, validation, ops" },
+  { k: "Observability", v: "Prometheus/Grafana/OTel, SLOs, alert hygiene" },
+  { k: "Cloud", v: "AWS/GCP/Azure, HA design, security + cost controls" },
 ];
 
 const about = `
@@ -25,7 +25,7 @@ I build and operate production platforms where reliability is non-negotiable —
 - **Evidence pages**: Kubernetes / Terraform / Kafka / Cloud / Automation with real-world patterns and artifacts
 `;
 
-export default function Page() {{
+export default function Page() {
   return (
     <main>
       <NavBar />
@@ -69,18 +69,18 @@ export default function Page() {{
         <div className="grid lg:grid-cols-2 gap-6">
           <div className="glass rounded-2xl p-6">
             <h2 className="text-xl sm:text-2xl font-bold mb-3">High-signal overview</h2>
-            <Markdown markdown={{about}} />
+            <Markdown markdown={about} />
           </div>
 
           <div className="glass rounded-2xl p-6">
             <h2 className="text-xl sm:text-2xl font-bold mb-3">Core strengths</h2>
             <div className="grid sm:grid-cols-2 gap-3">
-              {{proof.map((x) => (
-                <div key={{x.k}} className="rounded-2xl p-4 bg-white/5 border border-white/10">
-                  <div className="text-sm font-semibold text-slate-200">{{x.k}}</div>
-                  <div className="text-sm text-slate-300 mt-1">{{x.v}}</div>
+              {proof.map((x) => (
+                <div key={x.k} className="rounded-2xl p-4 bg-white/5 border border-white/10">
+                  <div className="text-sm font-semibold text-slate-200">{x.k}</div>
+                  <div className="text-sm text-slate-300 mt-1">{x.v}</div>
                 </div>
-              ))}}
+              ))}
             </div>
           </div>
         </div>
@@ -135,4 +135,4 @@ export default function Page() {{
       <ChatWidget />
     </main>
   );
-}}
+}
