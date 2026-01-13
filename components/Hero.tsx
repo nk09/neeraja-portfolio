@@ -21,12 +21,24 @@ export default function Hero() {
           </a>
           {/* Use a robust Drive URL and open in a new tab */}
           <a
-            href="https://drive.google.com/open?id=1-mMjABThyKHBFTGGnrgPI8H_R9vpjF10lDlqDA5qYAI"
+            href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-xl px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:opacity-90 transition"
           >
             View Resume
+          </a>
+          <a
+            href="/engagement"
+            className="rounded-xl px-4 py-2 border border-slate-600 text-slate-200 hover:bg-slate-800/40 transition"
+          >
+            Engagement
+          </a>
+          <a
+            href="/open-source"
+            className="rounded-xl px-4 py-2 border border-slate-600 text-slate-200 hover:bg-slate-800/40 transition"
+          >
+            Open Source
           </a>
         </div>
       </div>
