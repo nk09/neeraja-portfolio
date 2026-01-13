@@ -3,8 +3,8 @@ import { Analytics } from "@vercel/analytics/react";
 import React from "react";
 
 export const metadata = {
-  title: "Neeraja Khanapure | DevOps & AI Engineer",
-  description: "Portfolio of Neeraja Khanapure — DevOps, SRE, AI workflows, and cloud projects.",
+  title: "Neeraja Khanapure | SRE / Platform / DevOps",
+  description: "Production-grade SRE/Platform portfolio — Kubernetes, Terraform, Kafka, Cloud, Python automation, and high-signal engineering curation.",
 };
 
 const ThemeScript = () => (

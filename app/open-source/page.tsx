@@ -1,6 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import Link from "next/link";
+import NavBar from "../../components/NavBar";
 
 function isMonthDir(name: string) {
   return /^\d{4}-\d{2}$/.test(name);
@@ -21,7 +22,8 @@ export default async function OpenSourceIndex() {
     .reverse();
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-10">
+    \1
+      <NavBar />
       <h1 className="text-3xl sm:text-4xl font-extrabold mb-3">Open Source Picks</h1>
       <p className="text-slate-300 mb-8">
         Monthly curated OSS projects/issues worth tracking. Opinionated, low-noise.

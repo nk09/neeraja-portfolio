@@ -1,6 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import Link from "next/link";
+import NavBar from "../../components/NavBar";
 
 function isWeekDir(name: string) {
   return /^\d{4}-w\d{2}$/.test(name);
@@ -21,7 +22,8 @@ export default async function EngagementIndex() {
     .reverse();
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-10">
+    \1
+      <NavBar />
       <h1 className="text-3xl sm:text-4xl font-extrabold mb-3">Engagement Picks</h1>
       <p className="text-slate-300 mb-8">
         Curated weekly reads with a short, opinionated “why I care”. This is the public archive.
