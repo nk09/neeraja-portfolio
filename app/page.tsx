@@ -74,7 +74,7 @@ const SKILLS = [
   {
     icon: "📊",
     name: "Observability",
-    href: "/sre-intel",
+    href: "/observability",
     bullets: ["Prometheus, Grafana, OpenTelemetry", "SLO design and error budgets", "Alert hygiene and ownership", "Reducing on-call noise"],
   },
   {

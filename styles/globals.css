@@ -943,3 +943,70 @@ footer::before {
   .toc { display: none; }
   .ev-table th:last-child, .ev-table td:last-child { display: none; }
 }
+
+/* ── Skill pages ── */
+.skill-page-header { margin-bottom: 3rem; }
+.skill-section {
+  margin-bottom: 2.5rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1.5px solid var(--border2);
+}
+.skill-section:last-of-type { border-bottom: none; }
+.skill-section-title {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--indigo);
+  margin-bottom: 1.1rem;
+}
+.skill-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+.skill-list li {
+  font-size: 0.95rem;
+  color: var(--text2);
+  line-height: 1.7;
+  padding-left: 1.4rem;
+  position: relative;
+}
+.skill-list li::before {
+  content: '✦';
+  position: absolute; left: 0;
+  color: var(--saffron); font-size: 0.65rem; top: 0.28rem;
+}
+.break-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.break-item {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-left: 4px solid var(--gold);
+  border-radius: 0 var(--r) var(--r) 0;
+  padding: 1.1rem 1.25rem;
+  transition: border-color 0.2s;
+}
+.break-item:hover { border-color: var(--saffron); }
+.break-title {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--indigo);
+  margin-bottom: 0.4rem;
+}
+.break-desc {
+  font-size: 0.85rem;
+  color: var(--text2);
+  line-height: 1.65;
+}
+.skill-page-nav {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1.5px solid var(--border2);
+}
