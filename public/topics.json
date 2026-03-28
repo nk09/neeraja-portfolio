@@ -239,6 +239,78 @@
       ],
       "type": "workflow",
       "slug": "platform-engineering-the-paved-road-fails-when-it-paves-over-developer-autonomy"
+    },
+    "mlops-feedback-loop": {
+      "title": "MLOps retraining in production: the guardrails matter more than the pipeline",
+      "summary": "Wiring a retraining loop is a weekend project. Making it safe in production \u2014 data drift, silent label shifts, rollback semantics \u2014 is the actual engineering problem.",
+      "why": [
+        "Better offline metrics / worse live KPIs \u2014 training/serving skew from feature drift you didn't catch.",
+        "Unversioned training data makes RCA impossible. You can't reproduce what trained the broken model.",
+        "No rollback path means every bad retrain is a production incident with a multi-hour recovery."
+      ],
+      "rule": "No model promotes without: versioned dataset lineage, shadow/canary evaluation against live traffic, and a tested one-click rollback.",
+      "tools": [
+        "DVC + LakeFS for dataset versioning, MLflow/SageMaker Registry for model promotion gates.",
+        "Prometheus + Grafana for drift monitoring \u2014 alert on trend, not single-point anomalies."
+      ],
+      "takeaway": "Operational maturity isn't about tools \u2014 it's about designing for the failure you haven't seen yet.",
+      "diagram": "Risky loop:          Safe loop:\n                     \nData \u2500\u2500\u25b6 Train       Data \u2500\u2500\u25b6 Version \u2500\u2500\u25b6 Train\n  \u2502        \u2502           \u2502                    \u2502\n  \u25bc        \u25bc           \u25bc                    \u25bc\n Prod    Deploy      Validate            Shadow eval\n (no gate)          lineage              \u2502\n                                    Pass \u2500\u2500\u25b6 Canary\n                                    Fail \u2500\u2500\u25b6 Rollback",
+      "tags": [
+        "mlops",
+        "aiops",
+        "platformengineering",
+        "sre"
+      ],
+      "type": "workflow",
+      "slug": "mlops-feedback-loop"
+    },
+    "terraform-dag": {
+      "title": "Terraform DAGs at scale: when the graph becomes the hazard",
+      "summary": "Terraform's dependency graph is elegant at small scale. At 500+ resources across a mono-repo, it becomes the most dangerous part of your infrastructure.",
+      "why": [
+        "Implicit ordering assumptions survive until a refactor exposes them \u2014 usually as an unplanned destroy chain in prod.",
+        "Fan-out graphs make blast radius review near-impossible. 'What does this change affect?' has no fast answer.",
+        "`depends_on` papering over bad module interfaces \u2014 it fixes the symptom and couples the modules permanently."
+      ],
+      "rule": "If a module needs `depends_on` to be safe, the module boundary is wrong. Redesign the interface \u2014 don't paper over it.",
+      "tools": [
+        "`terraform graph | dot -Tsvg > graph.svg` \u2014 visualize fan-out and cycles before every major refactor.",
+        "Gate all applies with OPA/Conftest + mandatory human review on any planned destroy operations."
+      ],
+      "takeaway": "The difference between a senior engineer and a principal is knowing which guardrails to build before you need them.",
+      "diagram": "SAFE (small module):              DANGEROUS (at scale):\n\n[vpc] \u2500\u2500\u25b6 [subnet] \u2500\u2500\u25b6 [ec2]     [shared-net] \u2500\u2500\u25b6 [team-a-infra]\n                                          \u2502         [team-b-infra]\n                                          \u2502         [team-c-infra]\n                                          \u2502         [data-layer]\n                                  One change \u2192 fan-out destroy/create",
+      "tags": [
+        "terraform",
+        "iac",
+        "devops",
+        "sre"
+      ],
+      "type": "workflow",
+      "slug": "terraform-dag"
+    },
+    "resilient-architecture": {
+      "title": "Kubernetes rollouts: why 'pods are Ready' is the wrong promotion gate",
+      "summary": "Readiness is a node-local signal. Production health is a global one. Most rollout pipelines conflate the two \u2014 and that's where incidents come from.",
+      "why": [
+        "100% Ready pods while P95 latency spikes \u2014 bad cache warmup, noisy neighbor, DB connection saturation.",
+        "HPA reacts slower than a fast rollout \u2014 you ship overload before autoscaling catches up.",
+        "Canary stuck green because metrics lack the right labels/slices to isolate the failing segment."
+      ],
+      "rule": "Promote only when the canary holds your SLO slice (error rate + latency) for a fixed observation window. Otherwise: auto-rollback.",
+      "tools": [
+        "Argo Rollouts or Flagger with Prometheus gates \u2014 error rate, latency percentiles, saturation.",
+        "Alert on canary-vs-baseline deltas, not absolute thresholds. Catches regressions that pass absolute checks."
+      ],
+      "takeaway": "Operational maturity isn't about tools \u2014 it's about designing for the failure you haven't seen yet.",
+      "diagram": "Bad gate:                         Good gate:\n                                  \nDeploy \u2500\u2500\u25b6 Pods Ready? \u2500\u2500\u25b6 Done   Deploy \u2500\u2500\u25b6 Pods Ready?\n           (local signal)                    \u2502\n                                             \u25bc\n                                    SLO window check\n                                    (error rate + p95)\n                                             \u2502\n                                    Pass \u2500\u2500\u25b6 Promote\n                                    Fail \u2500\u2500\u25b6 Auto-rollback",
+      "tags": [
+        "kubernetes",
+        "reliability",
+        "devops",
+        "sre"
+      ],
+      "type": "workflow",
+      "slug": "resilient-architecture"
     }
   },
   "insights": {
