@@ -1,7 +1,6 @@
 import Link from "next/link";
 
-const TOPICS_URL =
-  "https://raw.githubusercontent.com/nk09/neeraja-public-posts/main/topics.json";
+const TOPICS_URL = "/topics.json";
 
 type InsightTopic = {
   title: string;

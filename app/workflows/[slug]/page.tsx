@@ -2,8 +2,7 @@ import Link from "next/link";
 
 // URL of the auto-generated topics.json in the public-posts repo.
 // This file is updated automatically every Tuesday/Friday by GitHub Actions.
-const TOPICS_URL =
-  "https://raw.githubusercontent.com/nk09/neeraja-public-posts/main/topics.json";
+const TOPICS_URL = "/topics.json";
 
 type WorkflowTopic = {
   title: string;

@@ -1,0 +1,386 @@
+{
+  "workflows": {
+    "terraform-dags-at-scale-when-the-graph-becomes-the-hazard": {
+      "title": "Terraform DAGs at scale: when the graph becomes the hazard",
+      "summary": "Terraform's dependency graph is elegant at small scale. At 500+ resources across a mono-repo, it becomes the most dangerous part of your infrastructure.",
+      "why": [
+        "Implicit ordering assumptions survive until a refactor exposes them \u2014 usually as an unplanned destroy chain in prod.",
+        "Fan-out graphs make blast radius review near-impossible. 'What does this change affect?' has no fast answer.",
+        "`depends_on` papering over bad module interfaces \u2014 it fixes the symptom and couples the modules permanently."
+      ],
+      "rule": "If a module needs `depends_on` to be safe, the module boundary is wrong. Redesign the interface \u2014 don't paper over it.",
+      "tools": [
+        "`terraform graph | dot -Tsvg > graph.svg` \u2014 visualize fan-out and cycles before every major refactor.",
+        "Gate all applies with OPA/Conftest + mandatory human review on any planned destroy operations."
+      ],
+      "takeaway": "The difference between a senior engineer and a principal is knowing which guardrails to build before you need them.",
+      "diagram": "SAFE (small module):              DANGEROUS (at scale):\n\n[vpc] \u2500\u2500\u25b6 [subnet] \u2500\u2500\u25b6 [ec2]     [shared-net] \u2500\u2500\u25b6 [team-a-infra]\n                                          \u2502         [team-b-infra]\n                                          \u2502         [team-c-infra]\n                                          \u2502         [data-layer]\n                                  One change \u2192 fan-out destroy/create",
+      "tags": [
+        "terraform",
+        "iac",
+        "devops",
+        "sre"
+      ],
+      "type": "workflow",
+      "slug": "terraform-dags-at-scale-when-the-graph-becomes-the-hazard"
+    },
+    "kubernetes-rollouts-why-pods-are-ready-is-the-wrong-promotion-gate": {
+      "title": "Kubernetes rollouts: why 'pods are Ready' is the wrong promotion gate",
+      "summary": "Readiness is a node-local signal. Production health is a global one. Most rollout pipelines conflate the two \u2014 and that's where incidents come from.",
+      "why": [
+        "100% Ready pods while P95 latency spikes \u2014 bad cache warmup, noisy neighbor, DB connection saturation.",
+        "HPA reacts slower than a fast rollout \u2014 you ship overload before autoscaling catches up.",
+        "Canary stuck green because metrics lack the right labels/slices to isolate the failing segment."
+      ],
+      "rule": "Promote only when the canary holds your SLO slice (error rate + latency) for a fixed observation window. Otherwise: auto-rollback.",
+      "tools": [
+        "Argo Rollouts or Flagger with Prometheus gates \u2014 error rate, latency percentiles, saturation.",
+        "Alert on canary-vs-baseline deltas, not absolute thresholds. Catches regressions that pass absolute checks."
+      ],
+      "takeaway": "Operational maturity isn't about tools \u2014 it's about designing for the failure you haven't seen yet.",
+      "diagram": "Bad gate:                         Good gate:\n                                  \nDeploy \u2500\u2500\u25b6 Pods Ready? \u2500\u2500\u25b6 Done   Deploy \u2500\u2500\u25b6 Pods Ready?\n           (local signal)                    \u2502\n                                             \u25bc\n                                    SLO window check\n                                    (error rate + p95)\n                                             \u2502\n                                    Pass \u2500\u2500\u25b6 Promote\n                                    Fail \u2500\u2500\u25b6 Auto-rollback",
+      "tags": [
+        "kubernetes",
+        "reliability",
+        "devops",
+        "sre"
+      ],
+      "type": "workflow",
+      "slug": "kubernetes-rollouts-why-pods-are-ready-is-the-wrong-promotion-gate"
+    },
+    "mlops-retraining-in-production-the-guardrails-matter-more-than-the-pipeline": {
+      "title": "MLOps retraining in production: the guardrails matter more than the pipeline",
+      "summary": "Wiring a retraining loop is a weekend project. Making it safe in production \u2014 data drift, silent label shifts, rollback semantics \u2014 is the actual engineering problem.",
+      "why": [
+        "Better offline metrics / worse live KPIs \u2014 training/serving skew from feature drift you didn't catch.",
+        "Unversioned training data makes RCA impossible. You can't reproduce what trained the broken model.",
+        "No rollback path means every bad retrain is a production incident with a multi-hour recovery."
+      ],
+      "rule": "No model promotes without: versioned dataset lineage, shadow/canary evaluation against live traffic, and a tested one-click rollback.",
+      "tools": [
+        "DVC + LakeFS for dataset versioning, MLflow/SageMaker Registry for model promotion gates.",
+        "Prometheus + Grafana for drift monitoring \u2014 alert on trend, not single-point anomalies."
+      ],
+      "takeaway": "Operational maturity isn't about tools \u2014 it's about designing for the failure you haven't seen yet.",
+      "diagram": "Risky loop:          Safe loop:\n                     \nData \u2500\u2500\u25b6 Train       Data \u2500\u2500\u25b6 Version \u2500\u2500\u25b6 Train\n  \u2502        \u2502           \u2502                    \u2502\n  \u25bc        \u25bc           \u25bc                    \u25bc\n Prod    Deploy      Validate            Shadow eval\n (no gate)          lineage              \u2502\n                                    Pass \u2500\u2500\u25b6 Canary\n                                    Fail \u2500\u2500\u25b6 Rollback",
+      "tags": [
+        "mlops",
+        "aiops",
+        "platformengineering",
+        "sre"
+      ],
+      "type": "workflow",
+      "slug": "mlops-retraining-in-production-the-guardrails-matter-more-than-the-pipeline"
+    },
+    "on-call-burnout-is-an-alert-design-problem-not-a-schedule-problem": {
+      "title": "On-call burnout is an alert design problem, not a schedule problem",
+      "summary": "Every team I've seen fight burnout by rotating people faster. The actual fix is almost always the same: the alerts are wrong.",
+      "why": [
+        "Alerts without a named owner and a runbook produce paralysis, not action \u2014 especially at 2am.",
+        "Flapping alerts are the fastest path to alert blindness \u2014 engineers learn to dismiss pages before reading them.",
+        "Cause-based alerts (disk full) and symptom-based alerts (latency spike) need different urgency and routing."
+      ],
+      "rule": "Before any alert ships: Who acts on it? What do they do? What's the cost of 30 minutes of inaction? If you can't answer all three, it's not ready.",
+      "tools": [
+        "Weekly alert review ritual: tag every last-week page as actionable / noisy / redundant. Kill the bottom two categories.",
+        "PagerDuty/OpsGenie grouping + escalation policies \u2014 reduce interrupt rate without hiding real incidents."
+      ],
+      "takeaway": "Reliability is a product feature. The engineers who treat it that way are the ones who get asked into the room.",
+      "diagram": "Alert quality spectrum:\n\nNoisy \u25c0\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 \u25b6 Actionable\n\n[cpu > 80%]  [pod restart]  [error budget burn]  [customer impact]\n     \u2502              \u2502               \u2502                    \u2502\n ignore me      maybe?         investigate!          wake me up",
+      "tags": [
+        "sre",
+        "observability",
+        "reliability",
+        "devops"
+      ],
+      "type": "workflow",
+      "slug": "on-call-burnout-is-an-alert-design-problem-not-a-schedule-problem"
+    },
+    "gitops-drift-the-silent-accumulation-that-makes-clusters-unmanageable": {
+      "title": "GitOps drift: the silent accumulation that makes clusters unmanageable",
+      "summary": "GitOps promises Git as the source of truth. The reality: every manual `kubectl` during an incident is a lie you told your cluster and forgot to retract.",
+      "why": [
+        "Manual patches during incidents create cluster state Git doesn't know about \u2014 Argo/Flux will overwrite it silently.",
+        "Secrets managed outside GitOps (sealed-secrets, Vault agent) drift independently \u2014 invisible in sync status.",
+        "Multi-cluster setups multiply drift: each cluster diverges at its own pace once human intervention happens."
+      ],
+      "rule": "Treat every manual cluster change as a 5-minute loan. Commit it back to Git before the incident closes \u2014 or it's gone.",
+      "tools": [
+        "Argo CD drift detection dashboard \u2014 surface out-of-sync resources before they become incident contributors.",
+        "Weekly diff job: live cluster state vs Git. Opens a PR for anything untracked. Makes drift visible before it's painful."
+      ],
+      "takeaway": "The best platform teams I've seen measure success by how rarely product teams have to think about infrastructure.",
+      "diagram": "GitOps truth gap over time:\n\nWeek 1:  Git \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 Cluster  (clean)\nWeek 4:  Git \u2550\u2550\u2550\u2550\u2550\u2550\u254c\u254c\u254c\u254c Cluster  (2 manual patches)\nWeek 12: Git \u2550\u2550\u2550\u2550\u254c\u254c\u254c\u254c\u254c\u254c\u254c\u254c\u254c\u254c\u254c\u254c\u254c  (drift accumulates)\n                         Cluster  (unknown state)",
+      "tags": [
+        "gitops",
+        "kubernetes",
+        "devops",
+        "platformengineering"
+      ],
+      "type": "workflow",
+      "slug": "gitops-drift-the-silent-accumulation-that-makes-clusters-unmanageable"
+    },
+    "kubernetes-cost-spikes-the-usual-suspects-and-how-to-find-them-fast": {
+      "title": "Kubernetes cost spikes: the usual suspects and how to find them fast",
+      "summary": "Cloud bills spike in Kubernetes for the same reasons every time. None of them are visible in the default dashboards \u2014 and most of them are invisible until month-end.",
+      "why": [
+        "Missing resource requests let the scheduler over-pack nodes \u2014 when pods OOM, you over-provision to compensate.",
+        "Cluster autoscaler adds nodes faster than it removes them. Spot interruptions leave zombie capacity for hours.",
+        "Logging agents (Fluentd/Filebeat) on every node with no sampling become the largest line item nobody owns."
+      ],
+      "rule": "Every workload needs requests AND limits. Review autoscaler scale-down thresholds monthly. Sample logs at source, not at the sink.",
+      "tools": [
+        "Kubecost or OpenCost \u2014 per-namespace/team attribution. Without this, no one feels accountable for the number.",
+        "KEDA for event-driven workload scaling \u2014 eliminates idle replicas without sacrificing responsiveness."
+      ],
+      "takeaway": "The best platform teams I've seen measure success by how rarely product teams have to think about infrastructure.",
+      "diagram": "Cost leak sources (ranked by surprise factor):\n\n1. Unset resource requests   \u2192 scheduler packs nodes \u2192 OOM \u2192 over-provision\n2. Autoscaler scale-down lag \u2192 zombie nodes after traffic spike\n3. Log pipelines w/o sample  \u2192 40% of bill, 0% of dashboards\n4. Idle namespaces           \u2192 dev clusters running 24/7\n5. Spot interruption gaps    \u2192 fallback to on-demand, never reverted",
+      "tags": [
+        "kubernetes",
+        "finops",
+        "devops",
+        "platformengineering"
+      ],
+      "type": "workflow",
+      "slug": "kubernetes-cost-spikes-the-usual-suspects-and-how-to-find-them-fast"
+    },
+    "incident-rca-without-a-data-backed-timeline-is-just-a-story-you-told-yourself": {
+      "title": "Incident RCA without a data-backed timeline is just a story you told yourself",
+      "summary": "Most post-mortems produce lessons that don't stick. The root cause is almost always the same: the timeline was built from memory, not from data.",
+      "why": [
+        "Log timestamps across services diverge by seconds without NTP \u2014 your timeline is wrong before you begin.",
+        "Correlation between a deploy event and a metric spike gets missed when dashboards lack deployment markers.",
+        "Contributing factors vanish from the narrative because they're hard to prove \u2014 and the same incident repeats."
+      ],
+      "rule": "Build the timeline from data only before the RCA meeting begins. If you can't source an event, mark it 'unverified' \u2014 not assumed.",
+      "tools": [
+        "OpenTelemetry trace IDs as the timeline spine \u2014 they cross service boundaries with sub-millisecond precision.",
+        "Grafana annotations on every deploy, config change, and scaling event \u2014 visible on every dashboard automatically."
+      ],
+      "takeaway": "Systems that are hard to debug were designed without the debugger in mind. Build observability in, not on.",
+      "diagram": "Memory-based timeline:     Data-backed timeline:\n\nT+0  \"Deploy happened\"     T+0:00  Deploy (Argo event)\nT+?  \"Errors started\"      T+0:07  Error rate +0.3% (Prometheus)\nT+?  \"Someone noticed\"     T+0:12  P95 latency 340ms\u21922.1s (trace)\nT+?  \"We rolled back\"      T+0:19  Alert fired (PD)\n                           T+0:31  Rollback complete (Argo)",
+      "tags": [
+        "sre",
+        "reliability",
+        "observability",
+        "devops"
+      ],
+      "type": "workflow",
+      "slug": "incident-rca-without-a-data-backed-timeline-is-just-a-story-you-told-yourself"
+    },
+    "service-mesh-adoption-the-operational-debt-lands-before-the-value-does": {
+      "title": "Service mesh adoption: the operational debt lands before the value does",
+      "summary": "Service meshes promise mTLS, traffic splitting, and deep observability. What arrives first is a new category of production failures your team has never debugged before.",
+      "why": [
+        "Sidecar injection failures look like app bugs \u2014 hours spent debugging the wrong layer.",
+        "mTLS policy rollout in a live cluster requires namespace-by-namespace phasing \u2014 one mistake stops traffic.",
+        "Mesh upgrades require coordinated sidecar restarts across the cluster \u2014 on large deployments, that's everything."
+      ],
+      "rule": "Start mesh in observability-only mode (no policy enforcement). Prove value in one namespace first. Earn the rollout, don't mandate it.",
+      "tools": [
+        "Linkerd for latency-sensitive workloads \u2014 lower resource overhead than Istio's Envoy per sidecar.",
+        "Namespace-level feature flags for mesh policy \u2014 lets you roll back one team without affecting others."
+      ],
+      "takeaway": "The difference between a senior engineer and a principal is knowing which guardrails to build before you need them.",
+      "diagram": "Adoption curve reality:\n\nValue\n  \u2502                              \u2571 mTLS + traffic control\n  \u2502                         \u2571\n  \u2502              \u2571\u2572  complexity trough\n  \u2502         \u2571\u2572\u2571\n  \u2502    \u2571\u2572\u2571   \u2190 sidecar failures, upgrade pain\n  \u2502\u2571\n  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25b6 Time\n     Week 1     Month 3     Month 9",
+      "tags": [
+        "kubernetes",
+        "devops",
+        "sre",
+        "platformengineering"
+      ],
+      "type": "workflow",
+      "slug": "service-mesh-adoption-the-operational-debt-lands-before-the-value-does"
+    },
+    "secrets-management-designing-for-rotation-not-just-storage": {
+      "title": "Secrets management: designing for rotation, not just storage",
+      "summary": "Most orgs solve 'where do we store secrets securely.' The teams that get paged at 2am are the ones who never solved 'how do we rotate them without downtime.'",
+      "why": [
+        "Secrets as env vars require pod restarts on rotation \u2014 making rotation a deployment event with blast radius.",
+        "Vault leases expiring in long-running jobs produce auth errors that look like app bugs, not infra failures.",
+        "Secret sprawl across namespaces means rotation happens in 12 places \u2014 and one always gets missed."
+      ],
+      "rule": "Design rotation before you design storage. If you can't rotate a secret in under 10 minutes with no downtime, the design isn't production-ready.",
+      "tools": [
+        "Vault Agent Injector or External Secrets Operator \u2014 decouple secret delivery from pod lifecycle.",
+        "Monthly secret access log audit \u2014 stale consumers are how you discover forgotten service accounts before attackers do."
+      ],
+      "takeaway": "Reliability is a product feature. The engineers who treat it that way are the ones who get asked into the room.",
+      "diagram": "Storage-only design:        Rotation-aware design:\n\nSecret \u2500\u2500\u25b6 Vault            Secret \u2500\u2500\u25b6 Vault \u2500\u2500\u25b6 Agent Injector\n              \u2502                                        \u2502\n         Pod (env var)                           Pod (file mount)\n              \u2502                                        \u2502\n         Restart to           Auto-reload \u25c0\u2500\u2500\u2500\u2500\u2500\u2500 Lease renewer\n         get new value        (zero downtime)",
+      "tags": [
+        "security",
+        "devops",
+        "kubernetes",
+        "sre"
+      ],
+      "type": "workflow",
+      "slug": "secrets-management-designing-for-rotation-not-just-storage"
+    },
+    "platform-engineering-the-paved-road-fails-when-it-paves-over-developer-autonomy": {
+      "title": "Platform engineering: the paved road fails when it paves over developer autonomy",
+      "summary": "Internal platforms succeed when product teams choose them because they reduce friction \u2014 not when they're mandated because someone drew a box on an architecture diagram.",
+      "why": [
+        "Compliance-first platforms get abandoned the moment engineers find a workaround \u2014 adoption needs perceived value.",
+        "Golden path templates that aren't maintained become the thing everyone forks immediately \u2014 N diverged paths.",
+        "Platform teams without production on-call exposure build abstractions that look clean and fail badly."
+      ],
+      "rule": "Measure platform success by developer time-to-production and incident contribution rate \u2014 not by adoption numbers you control.",
+      "tools": [
+        "Backstage for catalog + portal \u2014 but treat it as a product, not a project. Stale catalogs are worse than no catalog.",
+        "Quarterly 'friction interviews' with 3-5 product engineers \u2014 they'll identify the real bottlenecks faster than any metric."
+      ],
+      "takeaway": "The best platform teams I've seen measure success by how rarely product teams have to think about infrastructure.",
+      "diagram": "Platform adoption models:\n\nMandate model:              Product model:\n                            \nCTO decrees IDP \u2500\u2500\u25b6         Platform team ships \u2500\u2500\u25b6 Reduces deploy time\nTeams forced to use \u2502        \u2502                        \u2502\n       \u2502            \u2502        \u25bc                        \u25bc\nWorkarounds found   \u2502       Developers adopt      Platform iterates\nShadow IT grows \u25c0\u2500\u2500\u2500\u2518       voluntarily            on real friction",
+      "tags": [
+        "platformengineering",
+        "devops",
+        "sre",
+        "kubernetes"
+      ],
+      "type": "workflow",
+      "slug": "platform-engineering-the-paved-road-fails-when-it-paves-over-developer-autonomy"
+    }
+  },
+  "insights": {
+    "cicd-maturity-isnt-deploy-frequency-its-rollback-speed": {
+      "title": "CI/CD maturity isn't deploy frequency \u2014 it's rollback speed",
+      "summary": "Most orgs measure pipeline health by how fast they can ship. The metric that actually predicts reliability is how fast they can un-ship. The teams I've seen handle incidents best can rollback any chan\u2026",
+      "insight": "Most orgs measure pipeline health by how fast they can ship. The metric that actually predicts reliability is how fast they can un-ship. The teams I've seen handle incidents best can rollback any change in under 5 minutes \u2014 not because of tools, but because they designed for it.",
+      "non_obvious": "At scale, the teams who deploy most confidently are the ones who've made rollback boring and automatic \u2014 not the ones who've made deploys faster. Speed without a safety net is just a higher-velocity path to incidents.",
+      "rule": "If your rollback plan starts with 'first, find the last good commit...', you don't have a rollback plan. You have a recovery plan. These are not the same thing.",
+      "refs": [
+        "Google SRE Book \u2014 Release Engineering & Change Management (ch. 8)",
+        "Argo Rollouts docs \u2014 metric-gated progressive delivery and auto-rollback"
+      ],
+      "diagram": "Pipeline maturity spectrum:\n\nLevel 1:  Manual deploys, no rollback plan\nLevel 2:  Automated deploys, manual rollback (30-60 min)\nLevel 3:  Automated deploys, scripted rollback (5-15 min)\nLevel 4:  Progressive delivery + auto-rollback on SLO breach\n          (Rollback = automatic, measured in seconds)\n\nMost orgs think they're at L3. Incidents reveal they're at L2.",
+      "type": "insight",
+      "slug": "cicd-maturity-isnt-deploy-frequency-its-rollback-speed"
+    },
+    "observability-debt-is-invisible-until-an-incident-makes-it-expensive": {
+      "title": "Observability debt is invisible until an incident makes it expensive",
+      "summary": "You can't debug what you can't slice. Teams add dashboards for years and still can't answer the two questions that matter most in an incident: which customers are affected, and which change caused it.\u2026",
+      "insight": "You can't debug what you can't slice. Teams add dashboards for years and still can't answer the two questions that matter most in an incident: which customers are affected, and which change caused it. The problem is almost never the tool \u2014 it's the label strategy.",
+      "non_obvious": "The teams that debug incidents fastest don't have more metrics \u2014 they have metrics that answer the right questions at the right cardinality. SLI-first instrumentation design is a force multiplier. Most teams instrument first and wonder why dashboards are noisy.",
+      "rule": "Define your SLIs, then design labels that let you isolate by (service, env, version, customer tier) without exploding cardinality. Instrument last.",
+      "refs": [
+        "Brendan Gregg's USE Method + Google's RED Method for SLI-first design",
+        "Prometheus label best practices \u2014 cardinality anti-patterns (prometheus.io/docs)"
+      ],
+      "diagram": "Observability debt accumulation:\n\nMonth 1:  Service A metrics added (no ownership labels)\nMonth 3:  Service B metrics added (different label schema)\nMonth 6:  Dashboard count: 47. Useful in incident: 3.\nMonth 9:  P0 incident. Can't isolate by customer/version.\n          Engineer guesses. Guesses wrong. +45min MTTR.\n\nFix: Define label schema FIRST. Instrument second.",
+      "type": "insight",
+      "slug": "observability-debt-is-invisible-until-an-incident-makes-it-expensive"
+    },
+    "aiops-is-a-reasoning-accelerator-not-an-auto-remediation-system": {
+      "title": "AIOps is a reasoning accelerator, not an auto-remediation system",
+      "summary": "The orgs getting real value from AIOps aren't the ones automating remediation \u2014 they're the ones using AI to compress the signal-to-hypothesis gap. The hard part of incidents isn't fixing things. It's\u2026",
+      "insight": "The orgs getting real value from AIOps aren't the ones automating remediation \u2014 they're the ones using AI to compress the signal-to-hypothesis gap. The hard part of incidents isn't fixing things. It's knowing what to fix, in what order, with what confidence.",
+      "non_obvious": "AI that remediates without evidence is hallucination-as-a-service. The models that earn trust are the ones that show their work: here's the metric spike, here's the correlated trace, here's the similar past incident. Evidence first, action second.",
+      "rule": "Use AI for hypothesis ranking and runbook retrieval. Keep remediation behind explicit human approval. Trust is earned incrementally \u2014 don't give it away in the initial design.",
+      "refs": [
+        "OpenTelemetry \u2014 consistent signal foundation for AI correlation (opentelemetry.io)",
+        "Blameless RCA templates \u2014 'did AI help or mislead?' as a standard post-incident question"
+      ],
+      "diagram": "Where AI adds real value in incidents:\n\nAlert storm (200 events)\n       \u2502\n       \u25bc\n  [AI correlation]  \u2500\u2500\u25b6  3 likely root causes (ranked)\n       \u2502\n       \u25bc\n  [AI runbook retrieval]  \u2500\u2500\u25b6  Relevant steps surfaced\n       \u2502\n       \u25bc\n  Human validates hypothesis  \u2500\u2500\u25b6  Takes action\n       \u2502\n  Auto-remediation only here \u2500\u2500\u25b6  After human confirms",
+      "type": "insight",
+      "slug": "aiops-is-a-reasoning-accelerator-not-an-auto-remediation-system"
+    },
+    "slos-work-when-they-create-conversations-not-when-they-create-compliance": {
+      "title": "SLOs work when they create conversations, not when they create compliance",
+      "summary": "Most SLOs are set once, filed in a doc, and forgotten until an incident. The teams getting real value from error budgets use them as a weekly forcing function \u2014 a number that makes the reliability vs.\u2026",
+      "insight": "Most SLOs are set once, filed in a doc, and forgotten until an incident. The teams getting real value from error budgets use them as a weekly forcing function \u2014 a number that makes the reliability vs. velocity tradeoff visible to engineers and product managers in the same room.",
+      "non_obvious": "An SLO that's never violated is almost always a problem. Either it's too loose (you're over-investing in reliability) or it's not being measured honestly. Both cost money in different ways. The goal is a number that occasionally creates productive tension.",
+      "rule": "Review error budgets in sprint planning alongside features. If engineering and product aren't having an uncomfortable conversation once a quarter, your SLO isn't tight enough.",
+      "refs": [
+        "Alex Hidalgo \u2014 'Implementing Service Level Objectives' (O'Reilly, 2020)",
+        "Google SRE Workbook \u2014 Alerting on SLOs (ch. 5, free at sre.google)"
+      ],
+      "diagram": "SLO as compliance (common):     SLO as conversation (effective):\n\nSet SLO \u2500\u2500\u25b6 Monitor              Set SLO \u2500\u2500\u25b6 Weekly budget review\n     \u2502                                \u2502          \u2502\n  Incident \u2500\u2500\u25b6 Check SLO         Budget OK  Budget low\n     \u2502              \u2502                \u2502          \u2502\n   Blame       Finger-pointing    Ship fast  Freeze features\n                                   \u2502          \u2502\n                               Engineering + Product aligned",
+      "type": "insight",
+      "slug": "slos-work-when-they-create-conversations-not-when-they-create-compliance"
+    },
+    "feature-flags-are-ops-infrastructure-not-a-product-team-tool": {
+      "title": "Feature flags are ops infrastructure, not a product team tool",
+      "summary": "Most platform teams treat feature flags as a product/A-B testing concern and miss the most operationally valuable use case: instant rollback for any backend change, without a redeployment. The teams w\u2026",
+      "insight": "Most platform teams treat feature flags as a product/A-B testing concern and miss the most operationally valuable use case: instant rollback for any backend change, without a redeployment. The teams with the lowest incident MTTR almost all have the same secret \u2014 they can disable any code path in 30 seconds.",
+      "non_obvious": "A feature flag that can disable a code path in 30 seconds is worth more than any runbook during an active incident. It converts a deployment rollback \u2014 with its pipeline, merge, and propagation delays \u2014 into a config change. Most platform teams own the infra for this and never tell product teams it exists.",
+      "rule": "Every significant backend change ships behind a flag for at least 2 weeks post-deploy. Flags are cheap. Incidents are not. Make flags a deployment requirement, not an option.",
+      "refs": [
+        "Martin Fowler \u2014 Feature Toggles pattern (martinfowler.com/articles/feature-toggles.html)",
+        "LaunchDarkly / Unleash \u2014 flag lifecycle management and audit logging best practices"
+      ],
+      "diagram": "Feature flag as ops tool:\n\nNew backend change ships \u2500\u2500\u25b6 [flag: new_auth_flow = true]\n                                        \u2502\n                              Incident detected (T+12min)\n                                        \u2502\n                              [flag: new_auth_flow = false]\n                                        \u2502\n                              Recovery complete (T+13min)\n                              \nvs. traditional rollback:    Recovery complete (T+75min)",
+      "type": "insight",
+      "slug": "feature-flags-are-ops-infrastructure-not-a-product-team-tool"
+    },
+    "distributed-tracing-the-gap-between-having-it-and-using-it-in-incidents": {
+      "title": "Distributed tracing: the gap between having it and using it in incidents",
+      "summary": "Most orgs instrument distributed traces correctly and then debug incidents with grep. The investment in tracing pays off only when your debugging workflow changes \u2014 when you start from a trace ID inst\u2026",
+      "insight": "Most orgs instrument distributed traces correctly and then debug incidents with grep. The investment in tracing pays off only when your debugging workflow changes \u2014 when you start from a trace ID instead of a log query. That's a culture change, not a tooling change.",
+      "non_obvious": "Traces don't reduce MTTR on their own \u2014 runbooks that start from trace IDs do. The highest-leverage thing you can do after instrumenting is to rewrite your top 5 incident runbooks to start with 'get the trace ID from the alert, open it in Jaeger/Tempo, find the slowest span.' Engineers follow runbooks under pressure.",
+      "rule": "Instrument your 3 highest-traffic endpoints first. Then rewrite one runbook to start from a trace ID. Measure incident time-to-hypothesis before and after.",
+      "refs": [
+        "OpenTelemetry instrumentation guides \u2014 language SDKs (opentelemetry.io/docs)",
+        "Grafana Tempo + Loki correlation \u2014 trace-to-log workflow without leaving the dashboard"
+      ],
+      "diagram": "Current state (most orgs):      Target state:\n\nIncident fires                  Incident fires\n     \u2502                               \u2502\nGrep logs \u2500\u2500\u25b6 Guess service \u2500\u2500\u25b6  Pull trace ID from alert\n     \u2502                               \u2502\nMore grep \u2500\u2500\u25b6 Find error      Trace shows full request path\n     \u2502                               \u2502\nEscalate \u2500\u2500\u25b6 More engineers   Latency waterfall identifies\n     \u2502                         bottleneck in 3 minutes\nMTTR: 90 min                  MTTR: 15 min",
+      "type": "insight",
+      "slug": "distributed-tracing-the-gap-between-having-it-and-using-it-in-incidents"
+    },
+    "capacity-planning-is-a-risk-budget-conversation-not-a-utilization-spreadsheet": {
+      "title": "Capacity planning is a risk budget conversation, not a utilization spreadsheet",
+      "summary": "Teams that plan capacity by extrapolating last month's P95 get surprised when a product launch doubles traffic in a week. The right frame isn't 'what utilization should we run at' \u2014 it's 'what's the a\u2026",
+      "insight": "Teams that plan capacity by extrapolating last month's P95 get surprised when a product launch doubles traffic in a week. The right frame isn't 'what utilization should we run at' \u2014 it's 'what's the asymmetric cost of being wrong in each direction, and how much buffer does that justify?'",
+      "non_obvious": "The teams who get capacity planning right treat it as an insurance calculation, not an optimization problem. Over-provision cost is direct and visible. Under-provision cost is diffuse, delayed, and always larger than it looks. The asymmetry should drive your buffer strategy \u2014 not your CFO's target utilization number.",
+      "rule": "Set buffer based on incident cost, not utilization targets. For every P0 service, calculate: what does one hour of downtime cost vs one month of 20% over-provision? The math almost always justifies the buffer.",
+      "refs": [
+        "Google SRE Book \u2014 Being On Call and Handling Overload (ch. 11-12)",
+        "AWS/GCP cost anomaly detection \u2014 real-time signals for when your buffer is being consumed"
+      ],
+      "diagram": "Cost asymmetry analysis:\n\nOver-provision by 20%:    Under-provision by 20%:\n                          \nCost: +$8K/month          Cost: Incident\n                               + on-call burnout\nDirect, predictable            + customer churn\n                               + post-mortem\n                               + team morale tax\n\nFor P0 services, 20% buffer almost always wins.",
+      "type": "insight",
+      "slug": "capacity-planning-is-a-risk-budget-conversation-not-a-utilization-spreadsheet"
+    },
+    "dependency-updates-are-reliability-work-not-maintenance-work": {
+      "title": "Dependency updates are reliability work, not maintenance work",
+      "summary": "The orgs that get hit hardest by CVEs and supply chain incidents have one thing in common: they batch dependency updates into quarterly sprints. By then, the update is a 6-version jump, the changelog \u2026",
+      "insight": "The orgs that get hit hardest by CVEs and supply chain incidents have one thing in common: they batch dependency updates into quarterly sprints. By then, the update is a 6-version jump, the changelog is 200 lines, and the 'quick upgrade' becomes a multi-day incident waiting to happen.",
+      "non_obvious": "Automated dependency PRs (Renovate/Dependabot) with a 2-week merge SLA cost almost nothing \u2014 a 5-minute review per PR. Skipping them accumulates a compounding tax: more conflicts, larger blast radius, slower rollback. The math strongly favors continuous updates.",
+      "rule": "Automate dependency PRs. Set a team policy: merge or explicitly defer within 2 weeks. Every skip is a known risk you're consciously accepting \u2014 treat it that way.",
+      "refs": [
+        "Renovate Bot \u2014 automerge strategies, scheduling, and grouping (docs.renovatebot.com)",
+        "SLSA framework \u2014 supply chain integrity levels and provenance (slsa.dev)"
+      ],
+      "diagram": "Batch update model (risky):   Continuous model (safe):\n\nQ1: Skip                      Week 1: +2 deps (auto-PR)\nQ2: Skip                      Week 2: +1 dep (auto-PR)\nQ3: Skip                      Week 3: +3 deps (auto-PR)\nQ4: \"Upgrade sprint\"          ...\n    6-version jumps            Each PR: small diff, fast review\n    Breaking changes           Rollback: one PR revert\n    3-day debugging session    MTTR if it breaks: 10 min",
+      "type": "insight",
+      "slug": "dependency-updates-are-reliability-work-not-maintenance-work"
+    },
+    "runbook-quality-decays-silently-and-that-decay-kills-mttr": {
+      "title": "Runbook quality decays silently \u2014 and that decay kills MTTR",
+      "summary": "Runbooks that haven't been run recently are wrong. Not outdated \u2014 wrong. The service changed. The tool was deprecated. The endpoint moved. Nobody updated the doc because nobody reads it until 3am. And\u2026",
+      "insight": "Runbooks that haven't been run recently are wrong. Not outdated \u2014 wrong. The service changed. The tool was deprecated. The endpoint moved. Nobody updated the doc because nobody reads it until 3am. And at 3am, a wrong runbook is worse than no runbook \u2014 it sends engineers down confident paths that dead-end.",
+      "non_obvious": "The highest-leverage runbook improvement isn't better writing \u2014 it's a validation date and a quarterly review reminder. A runbook with 'last validated: 2 weeks ago' that's 70% accurate is worth more than a beautifully written one from 8 months ago that's 40% accurate.",
+      "rule": "Every runbook gets a 'last validated' date. Anything older than 3 months is assumed broken until proven otherwise. Review is part of the on-call rotation, not optional.",
+      "refs": [
+        "PagerDuty Incident Response guide \u2014 runbook standards and validation cadence",
+        "Post-incident review template: 'Did the runbook help, mislead, or was it missing?' (standard question)"
+      ],
+      "diagram": "Runbook decay curve:\n\nQuality\n  \u2502\u2593\u2593\u2593\u2593\u2593\u2593\u2593\u2593\u2593\u2593\n  \u2502         \u2593\u2593\u2593\u2593\u2593\n  \u2502              \u2593\u2593\u2593\u2593\n  \u2502                  \u2593\u2593\u2593\u2593\u2593\n  \u2502                       \u2593\u2593\u2593\u2591\u2591\u2591\u2591\u2591\u2591\u2591\n  \u2502                             \u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591 \u2190 \"last validated 8 months ago\"\n  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25b6\n  Write   Month 1  Month 3  Month 6  Month 9",
+      "type": "insight",
+      "slug": "runbook-quality-decays-silently-and-that-decay-kills-mttr"
+    },
+    "zero-downtime-deployments-what-zero-actually-requires-most-teams-dont-have": {
+      "title": "Zero-downtime deployments: what 'zero' actually requires most teams don't have",
+      "summary": "Most teams say they do zero-downtime deploys and mean 'we haven't gotten a complaint in a while.' Actually measuring it reveals the truth: connection drops, in-flight request failures, and cache inval\u2026",
+      "insight": "Most teams say they do zero-downtime deploys and mean 'we haven't gotten a complaint in a while.' Actually measuring it reveals the truth: connection drops, in-flight request failures, and cache invalidation spikes during rollouts that nobody's tracking because nobody defined what zero means.",
+      "non_obvious": "The most common failure mode is passing health checks before the app is actually ready \u2014 DB connections not pooled, caches not warm, background workers not started. The pod is 'Ready' and the app is still initializing. Users see errors. Nobody's dashboard shows it because nobody's measuring error rate during the rollout window.",
+      "rule": "Define 'zero downtime' with a measurable SLI: error rate < 0.1% during any 5-minute deploy window. Validate this in staging before calling it done. Measure it in production on every release.",
+      "refs": [
+        "Kubernetes deployment strategies \u2014 rolling, blue/green, canary with traffic splitting",
+        "AWS ALB / GCP Cloud Load Balancing \u2014 connection draining configuration and health check tuning"
+      ],
+      "diagram": "What 'zero downtime' actually requires:\n\n\u2713 Health checks reflect REAL readiness (not just 'process started')\n\u2713 Graceful shutdown drains in-flight requests (SIGTERM handling)\n\u2713 Connection draining at the load balancer (not just the pod)\n\u2713 Rollback faster than the deploy (< 5 min, automated)\n\u2713 SLI measurement during the rollout window (not just after)\n\nMissing any one of these = not zero downtime. Just unmonitored downtime.",
+      "type": "insight",
+      "slug": "zero-downtime-deployments-what-zero-actually-requires-most-teams-dont-have"
+    }
+  }
+}
