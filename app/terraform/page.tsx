@@ -32,7 +32,7 @@ export default function TerraformPage() {
           <div className="break-items">
             <div className="break-item">
               <div className="break-title">Surprise destroys on refactor</div>
-              <div class="break-desc">Implicit dependencies hide ordering until you rename something. Gate applies with a human review on any planned destroy.</div>
+              <div className="break-desc">Implicit dependencies hide ordering until you rename something. Gate applies with a human review on any planned destroy.</div>
             </div>
             <div className="break-item">
               <div className="break-title">Monolithic state</div>
