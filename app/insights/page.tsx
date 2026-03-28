@@ -11,19 +11,19 @@ const INSIGHTS = [
   {
     id: "cicd-reliability",
     label: "CI/CD",
-    title: "CI/CD isn't speed — it's predictable change under load",
+    title: "CI/CD isn't speed. It's predictable change under load",
     insight:
-      "Most pipelines fail not because tests are slow, but because rollout risk isn't modeled — blast radius, rollback, and observability gates are afterthoughts that only matter when something goes wrong.",
+      "Most pipelines fail not because tests are slow, but because rollout risk isn't modeled, blast radius, rollback, and observability gates are afterthoughts that only matter when something goes wrong.",
     deeperTake:
-      "At scale, the fastest teams are the ones who can rollback in minutes and prove safety with metrics — not the ones who can click Deploy more often. Velocity is downstream of confidence. Confidence is downstream of observability gates and rehearsed rollback.",
+      "At scale, the fastest teams are the ones who can rollback in minutes and prove safety with metrics, not the ones who can click Deploy more often. Velocity is downstream of confidence. Confidence is downstream of observability gates and rehearsed rollback.",
     pitfalls: [
-      "Treating \"all tests pass\" as \"safe to deploy\" — your test suite doesn't know about your production traffic patterns, cache state, or database connection pool saturation.",
+      "Treating \"all tests pass\" as \"safe to deploy\". Your test suite doesn't know about your production traffic patterns, cache state, or database connection pool saturation.",
       "Rollback is an untested code path. Teams practice deploying constantly; they practice rolling back maybe once a year. The one time you need it under pressure, the runbook is stale.",
     ],
     rule: "If you can't explain rollback + SLO gates in one slide, the pipeline is not production-ready.",
     refs: [
-      { label: "Google SRE Book — Release Engineering", href: "https://sre.google/sre-book/release-engineering/" },
-      { label: "DORA Metrics — DevOps Research", href: "https://dora.dev/" },
+      { label: "Google SRE Book, Release Engineering", href: "https://sre.google/sre-book/release-engineering/" },
+      { label: "DORA Metrics, DevOps Research", href: "https://dora.dev/" },
     ],
     tags: ["cicd", "reliability", "sre"],
     relatedPage: "/workflows",
@@ -34,16 +34,16 @@ const INSIGHTS = [
     label: "Observability",
     title: "Observability is a label strategy problem disguised as a tooling problem",
     insight:
-      "You can't debug what you can't slice. Most 'noisy dashboards' problems are really missing ownership labels, inconsistent dimensions, and no SLI intent — not a Prometheus or Grafana problem.",
+      "You can't debug what you can't slice. Most 'noisy dashboards' problems are really missing ownership labels, inconsistent dimensions, and no SLI intent, not a Prometheus or Grafana problem.",
     deeperTake:
-      "Teams add more metrics and still can't answer: which customer segment is broken, or which rollout caused it. The cardinality is wrong in the places that matter. The fix isn't more tools — it's defining the question (SLI) and designing labels that let you isolate (service, env, version, tenant) without blowing up cardinality.",
+      "Teams add more metrics and still can't answer: which customer segment is broken, or which rollout caused it. The cardinality is wrong in the places that matter. The fix isn't more tools. It's defining the question (SLI) and designing labels that let you isolate (service, env, version, tenant) without blowing up cardinality.",
     pitfalls: [
-      "Importing a community dashboard with 200 panels and calling it 'observability' — if you can't explain what each panel is answering during an incident, it's decoration.",
-      "High-cardinality labels on the wrong dimensions — user_id as a Prometheus label is a cardinality bomb. tenant_tier or region is usually the right granularity.",
+      "Importing a community dashboard with 200 panels and calling it 'observability', if you can't explain what each panel is answering during an incident, it's decoration.",
+      "High-cardinality labels on the wrong dimensions, user_id as a Prometheus label is a cardinality bomb. tenant_tier or region is usually the right granularity.",
     ],
     rule: "Define SLIs first, then design labels that let you isolate the failure. Everything else is supporting context.",
     refs: [
-      { label: "Google SRE Workbook — Implementing SLOs", href: "https://sre.google/workbook/implementing-slos/" },
+      { label: "Google SRE Workbook, Implementing SLOs", href: "https://sre.google/workbook/implementing-slos/" },
       { label: "Prometheus Label Best Practices", href: "https://prometheus.io/docs/practices/naming/" },
     ],
     tags: ["observability", "prometheus", "sre"],
@@ -53,18 +53,18 @@ const INSIGHTS = [
   {
     id: "aiops-reasoning",
     label: "AIOps",
-    title: "AIOps isn't auto-healing — it's faster, safer incident reasoning",
+    title: "AIOps isn't auto-healing. It's faster, safer incident reasoning",
     insight:
-      "AI is best at compressing signal: summarizing anomalies, correlating events across systems, and ranking likely causes — so humans can validate and decide quickly. Not so humans can step back entirely.",
+      "AI is best at compressing signal: summarizing anomalies, correlating events across systems, and ranking likely causes. So humans can validate and decide quickly. Not so humans can step back entirely.",
     deeperTake:
-      "If the model can't show evidence — metrics, logs, traces — behind a hypothesis, it becomes hallucination-as-a-service. The danger isn't that AI gets it wrong; it's that a confident wrong answer at 2am leads an on-call engineer down the wrong path for 45 minutes.",
+      "If the model can't show evidence, metrics, logs, traces, behind a hypothesis, it becomes hallucination-as-a-service. The danger isn't that AI gets it wrong; it's that a confident wrong answer at 2am leads an on-call engineer down the wrong path for 45 minutes.",
     pitfalls: [
-      "Auto-remediation without approval gates — AI identifies the fix, triggers the restart, nobody knows what happened. Until the \"fix\" made things worse.",
-      "Trusting anomaly detection on raw metrics without context — a CPU spike looks identical whether it's a traffic surge, a runaway job, or an attack. The model needs the context humans have.",
+      "Auto-remediation without approval gates, AI identifies the fix, triggers the restart, nobody knows what happened. Until the \"fix\" made things worse.",
+      "Trusting anomaly detection on raw metrics without context, a CPU spike looks identical whether it's a traffic surge, a runaway job, or an attack. The model needs the context humans have.",
     ],
     rule: "Use AI for hypothesis ranking + runbook retrieval; keep remediation behind explicit approvals and guardrails.",
     refs: [
-      { label: "OpenTelemetry — Consistent Signal Collection", href: "https://opentelemetry.io/docs/" },
+      { label: "OpenTelemetry, Consistent Signal Collection", href: "https://opentelemetry.io/docs/" },
       { label: "Blameless Postmortem Templates", href: "https://sre.google/sre-book/postmortem-culture/" },
     ],
     tags: ["aiops", "observability", "sre"],
@@ -81,7 +81,7 @@ export default function InsightsPage() {
           <h1 className="page-title">Insights</h1>
           <p className="page-sub">
             Opinionated takes on CI/CD reliability, observability design, and AIOps.
-            Each piece covers the non-obvious angle — what goes wrong and why.
+            Each piece covers the non-obvious angle, what goes wrong and why.
           </p>
         </div>
 

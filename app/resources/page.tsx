@@ -6,7 +6,7 @@ import path from "path";
 export const metadata: Metadata = {
   title: "Resources | Neeraja Khanapure",
   description:
-    "Weekly refreshed SRE/DevOps/Platform engineering reading list — curated from AWS, Grafana, CNCF, Prometheus, HashiCorp, and more.",
+    "Weekly refreshed SRE/DevOps/Platform engineering reading list, curated from AWS, Grafana, CNCF, Prometheus, HashiCorp, and more.",
 };
 
 // ── Static seed resources (shown until resources_sync workflow populates weekly.html) ──
@@ -26,7 +26,7 @@ const SEED_RESOURCES = [
       { title: "Prometheus Operator Docs", href: "https://prometheus-operator.dev/", src: "prometheus-operator.dev" },
       { title: "Grafana Best Practices", href: "https://grafana.com/docs/grafana/latest/best-practices/", src: "Grafana" },
       { title: "OpenTelemetry Getting Started", href: "https://opentelemetry.io/docs/getting-started/", src: "OTel" },
-      { title: "Google SRE Workbook — SLOs", href: "https://sre.google/workbook/implementing-slos/", src: "Google" },
+      { title: "Google SRE Workbook, SLOs", href: "https://sre.google/workbook/implementing-slos/", src: "Google" },
     ],
   },
   {
@@ -34,7 +34,7 @@ const SEED_RESOURCES = [
     items: [
       { title: "Terraform Best Practices", href: "https://www.terraform-best-practices.com/", src: "terraform-best-practices.com" },
       { title: "HashiCorp Learn", href: "https://developer.hashicorp.com/terraform/tutorials", src: "HashiCorp" },
-      { title: "Atlantis — Terraform Pull Request Automation", href: "https://www.runatlantis.io/", src: "runatlantis.io" },
+      { title: "Atlantis, Terraform Pull Request Automation", href: "https://www.runatlantis.io/", src: "runatlantis.io" },
     ],
   },
   {
@@ -42,16 +42,16 @@ const SEED_RESOURCES = [
     items: [
       { title: "Confluent Kafka Tutorials", href: "https://developer.confluent.io/tutorials/", src: "Confluent" },
       { title: "Kafka: The Definitive Guide (free)", href: "https://www.confluent.io/resources/kafka-the-definitive-guide-v2/", src: "Confluent" },
-      { title: "Strimzi — Kafka on Kubernetes", href: "https://strimzi.io/documentation/", src: "strimzi.io" },
+      { title: "Strimzi, Kafka on Kubernetes", href: "https://strimzi.io/documentation/", src: "strimzi.io" },
     ],
   },
   {
     category: "SRE & Reliability",
     items: [
       { title: "Google SRE Book (free)", href: "https://sre.google/sre-book/table-of-contents/", src: "Google" },
-      { title: "Incident.io — Incident Management Guide", href: "https://incident.io/guide", src: "incident.io" },
+      { title: "Incident.io, Incident Management Guide", href: "https://incident.io/guide", src: "incident.io" },
       { title: "The On-Call Handbook", href: "https://github.com/alicegoldfuss/oncall-handbook", src: "GitHub" },
-      { title: "DORA Metrics — DevOps Research", href: "https://dora.dev/", src: "dora.dev" },
+      { title: "DORA Metrics, DevOps Research", href: "https://dora.dev/", src: "dora.dev" },
     ],
   },
 ];

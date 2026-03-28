@@ -4,20 +4,20 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Production Workflows | Neeraja Khanapure",
   description:
-    "Real production workflow patterns — Terraform, Kubernetes rollouts, MLOps pipelines, CI/CD reliability. Failure modes, rules of thumb, and tools.",
+    "Real production workflow patterns, Terraform, Kubernetes rollouts, MLOps pipelines, CI/CD reliability. Failure modes, rules of thumb, and tools.",
 };
 
 const WORKFLOWS = [
   {
     id: "terraform-dag",
     label: "IaC",
-    title: "Terraform DAGs aren't deterministic at scale — your abstractions are",
-    hook: "Terraform's graph is great at parallelism, not safety. The sharp edges show up when the graph gets wide — mono-repos, shared modules, many resources in one state.",
+    title: "Terraform DAGs aren't deterministic at scale. Your abstractions are",
+    hook: "Terraform's graph is great at parallelism, not safety. The sharp edges show up when the graph gets wide, mono-repos, shared modules, many resources in one state.",
     sections: [
       {
         heading: "What usually breaks",
         items: [
-          "Implicit dependencies hide ordering until a refactor turns into a surprise destroy/create chain. A resource that \"should\" come after another doesn't have an explicit dep — works fine until you rename something.",
+          "Implicit dependencies hide ordering until a refactor turns into a surprise destroy/create chain. A resource that \"should\" come after another doesn't have an explicit dep, works fine until you rename something.",
           "Fan-out graphs (100+ resources) explode apply time and make blast-radius review impossible. One bad change, 45-minute rollback.",
           "`depends_on` \"fixes\" symptoms, then quietly couples modules and kills reuse. It's the IaC equivalent of `// TODO: fix this properly`.",
         ],
@@ -25,7 +25,7 @@ const WORKFLOWS = [
       {
         heading: "The rule",
         items: [
-          "If a module needs `depends_on` to be safe, the module boundary is leaking — redesign the interface, don't paper over it.",
+          "If a module needs `depends_on` to be safe, the module boundary is leaking. Redesign the interface, don't paper over it.",
           "Separate state by blast radius and ownership (not resource type). Networking team's VPCs = different state from app team's ECS services.",
           "Gate applies with policy (OPA/Conftest or Checkov) + a required human review on any planned destroys.",
         ],
@@ -33,8 +33,8 @@ const WORKFLOWS = [
       {
         heading: "Sanity checks I actually run",
         items: [
-          "`terraform graph | dot -Tsvg > graph.svg` — inspect fan-out and cycles before big refactors. If it looks like a hairball, the abstractions need work.",
-          "`terraform plan -out=tfplan && terraform show -json tfplan | jq '.resource_changes[] | select(.change.actions[] == \"delete\")'` — catch unintended destroys before apply.",
+          "`terraform graph | dot -Tsvg > graph.svg`. Inspect fan-out and cycles before big refactors. If it looks like a hairball, the abstractions need work.",
+          "`terraform plan -out=tfplan && terraform show -json tfplan | jq '.resource_changes[] | select(.change.actions[] == \"delete\")'`. Catch unintended destroys before apply.",
           "Run `tfsec` and `checkov` in CI with hard-fail on HIGH severity. Merge-blocked deploys are better than Monday morning incidents.",
         ],
       },
@@ -47,12 +47,12 @@ const WORKFLOWS = [
     id: "k8s-rollouts",
     label: "Kubernetes",
     title: "Kubernetes rollouts: promote on SLOs, not on \"pods are Ready\"",
-    hook: "Readiness is a local signal. Production impact is global. Real rollouts need promotion gates that track user-facing health — not whether pods passed their health check.",
+    hook: "Readiness is a local signal. Production impact is global. Real rollouts need promotion gates that track user-facing health, not whether pods passed their health check.",
     sections: [
       {
         heading: "What usually breaks",
         items: [
-          "A rollout can be 100% Ready while P95 latency and error-rate spike — bad cache warmup, noisy neighbor, DB connection exhaustion all happen after pods are healthy.",
+          "A rollout can be 100% Ready while P95 latency and error-rate spike, bad cache warmup, noisy neighbor, DB connection exhaustion all happen after pods are healthy.",
           "HPA reacts slower than a fast rollout; you ship overload before autoscaling catches up. Especially painful with traffic spikes on Monday mornings.",
           "Canary gets 'stuck green' because metrics are too coarse (no labels/slices). You miss blast radius on a specific endpoint or tenant until it's too late.",
         ],
@@ -61,8 +61,8 @@ const WORKFLOWS = [
         heading: "The rule",
         items: [
           "Promote only when your canary holds the SLO slice you care about (error-rate + latency) for a fixed window. Auto-rollback if it doesn't.",
-          "Set PodDisruptionBudgets before you care about them — they take 30 seconds and will save you from a bad node drain at 2am.",
-          "Add `minReadySeconds` to Deployments. It's the cheapest canary you have — a pod that crashes 10 seconds after becoming Ready wouldn't have helped you.",
+          "Set PodDisruptionBudgets before you care about them, they take 30 seconds and will save you from a bad node drain at 2am.",
+          "Add `minReadySeconds` to Deployments. It's the cheapest canary you have, a pod that crashes 10 seconds after becoming Ready wouldn't have helped you.",
         ],
       },
       {
@@ -82,12 +82,12 @@ const WORKFLOWS = [
     id: "mlops-feedback-loop",
     label: "MLOps",
     title: "End-to-end MLOps retraining loop: reliability is in the guardrails",
-    hook: "Auto-retraining is easy to wire up in an afternoon. Making it safe in production is the hard part — data drift, silent label shifts, and rollback semantics all bite you later.",
+    hook: "Auto-retraining is easy to wire up in an afternoon. Making it safe in production is the hard part, data drift, silent label shifts, and rollback semantics all bite you later.",
     sections: [
       {
         heading: "What usually breaks",
         items: [
-          "A 'better' offline model degrades live KPIs due to training-serving skew — the features at training time aren't the same as serving time, and nobody noticed until the A/B test showed a 12% conversion drop.",
+          "A 'better' offline model degrades live KPIs due to training-serving skew, the features at training time aren't the same as serving time, and nobody noticed until the A/B test showed a 12% conversion drop.",
           "Unversioned data and labels make incident RCA impossible. You can't reproduce what trained the model, so you can't explain why it got worse.",
           "Promotion without canary + rollback turns retraining into a weekly outage generator. 'Auto-healing' ML pipelines that auto-promote are the opposite of reliable.",
         ],
@@ -97,15 +97,15 @@ const WORKFLOWS = [
         items: [
           "No model ships without: dataset/version lineage, shadow/canary evaluation against the live baseline, and a one-click rollback path that's been tested.",
           "Define 'model is broken' in terms of the KPI it controls, not just offline accuracy. A model with 94% accuracy that's costing you money is a broken model.",
-          "Treat model promotion like a Kubernetes rollout — staged, metric-gated, with automatic rollback on regression.",
+          "Treat model promotion like a Kubernetes rollout, staged, metric-gated, with automatic rollback on regression.",
         ],
       },
       {
         heading: "Tools that help",
         items: [
           "DVC or LakeFS for dataset versioning. MLflow or SageMaker Model Registry for model lineage. You want to answer 'what data trained this model' in under 2 minutes.",
-          "Monitor drift + performance slices with Prometheus/Grafana. Alert on trend, not single spikes — a model degrading 0.5%/day will kill you slowly while all your point-in-time checks look fine.",
-          "Shadow mode before canary — run the new model in parallel, log predictions, compare offline. Canary before full promotion — 5% traffic with a human watching the dashboard.",
+          "Monitor drift + performance slices with Prometheus/Grafana. Alert on trend, not single spikes, a model degrading 0.5%/day will kill you slowly while all your point-in-time checks look fine.",
+          "Shadow mode before canary. Run the new model in parallel, log predictions, compare offline. Canary before full promotion, 5% traffic with a human watching the dashboard.",
         ],
       },
     ],
@@ -116,15 +116,15 @@ const WORKFLOWS = [
   {
     id: "ci-cd-reliability",
     label: "CI/CD",
-    title: "CI/CD isn't speed — it's predictable change under load",
-    hook: "Most pipelines fail not because tests are slow, but because rollout risk isn't modeled — blast radius, rollback, and observability gates are afterthoughts.",
+    title: "CI/CD isn't speed. It's predictable change under load",
+    hook: "Most pipelines fail not because tests are slow, but because rollout risk isn't modeled, blast radius, rollback, and observability gates are afterthoughts.",
     sections: [
       {
         heading: "What usually breaks",
         items: [
           "Pipelines that test everything but gate nothing. Green CI is not 'safe to deploy'. You need to know what a bad deploy looks like in production and what you'll do in the first 5 minutes.",
           "Rollback is an afterthought. Teams practice deploying; nobody practices rolling back. Then the one time you need it, the runbook is 18 months stale and the artifact registry only keeps 2 versions.",
-          "Observability gates don't exist. The deploy finishes, the pod is healthy, the pipeline goes green — and nobody's watching error rates or latency for the next 10 minutes.",
+          "Observability gates don't exist. The deploy finishes, the pod is healthy, the pipeline goes green and nobody's watching error rates or latency for the next 10 minutes.",
         ],
       },
       {
@@ -157,7 +157,7 @@ export default function WorkflowsPage() {
         <div className="page-header">
           <h1 className="page-title">Production Workflows</h1>
           <p className="page-sub">
-            Real workflow patterns — Terraform, Kubernetes rollouts, MLOps pipelines, CI/CD reliability.
+            Real workflow patterns, Terraform, Kubernetes rollouts, MLOps pipelines, CI/CD reliability.
             Failure modes, rules of thumb, and the tools I actually reach for.
           </p>
           <div className="thinking-meta">

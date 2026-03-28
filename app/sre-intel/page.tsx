@@ -5,9 +5,9 @@ import { useState, useRef, useEffect } from "react";
 const SUGGESTIONS = [
   "How do I fix HPA thrashing on EKS?",
   "Terraform drift detection best practices?",
-  "Kafka consumer lag — where do I start?",
+  "Kafka consumer lag, where do I start?",
   "Design an SLO for an API endpoint",
-  "OTel vs Prometheus — when to use each?",
+  "OTel vs Prometheus, when to use each?",
   "Safe Kubernetes upgrade checklist",
   "Terraform module guardrails pattern",
   "Kafka DLQ retry strategy",
@@ -33,7 +33,7 @@ export default function SreIntelPage() {
     {
       role: "assistant",
       content:
-        "Hey — I'm SRE Intel, a production knowledge assistant. Ask me a real question: Kubernetes debugging, Terraform patterns, Kafka reliability, SLO design, cloud HA architecture, or anything in the SRE/platform space. I give specific, opinionated answers — not documentation summaries.",
+        "Hey, I'm SRE Intel, a production knowledge assistant. Ask me a real question: Kubernetes debugging, Terraform patterns, Kafka reliability, SLO design, cloud HA architecture, or anything in the SRE/platform space. I give specific, opinionated answers, not documentation summaries.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -60,10 +60,10 @@ export default function SreIntelPage() {
         body: JSON.stringify({ messages: next }),
       });
       const data = await res.json();
-      const reply = data.content?.[0]?.text ?? "Something went wrong — please try again.";
+      const reply = data.content?.[0]?.text ?? "Something went wrong, please try again.";
       setMessages([...next, { role: "assistant", content: reply }]);
     } catch {
-      setMessages([...next, { role: "assistant", content: "Connection error — please try again." }]);
+      setMessages([...next, { role: "assistant", content: "Connection error, please try again." }]);
     }
     setLoading(false);
   }
@@ -76,7 +76,7 @@ export default function SreIntelPage() {
             <div className="sre-badge">SRE Intel</div>
             <h1 className="sre-intel-h1">Production SRE Knowledge Assistant</h1>
             <p className="sre-intel-tagline">
-              Ask production questions. Get opinionated, specific answers — not docs summaries.
+              Ask production questions. Get opinionated, specific answers, not docs summaries.
               Kubernetes · Terraform · Kafka · Observability · Cloud Reliability.
             </p>
           </div>
@@ -162,7 +162,7 @@ export default function SreIntelPage() {
             <div className="sidebar-section sidebar-about">
               <div className="sidebar-label">About this tool</div>
               <p className="sidebar-about-text">
-                SRE Intel is built by Neeraja Khanapure — a Platform/SRE engineer with
+                SRE Intel is built by Neeraja Khanapure, a Platform/SRE engineer with
                 production experience on EKS/GKE, Terraform, Kafka, and multi-cloud HA systems.
                 The assistant reflects real production patterns, not textbook answers.
               </p>

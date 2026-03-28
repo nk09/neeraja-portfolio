@@ -4,275 +4,309 @@ import ProfilePhoto from "../components/ProfilePhoto";
 export const metadata = {
   title: "Neeraja Khanapure | SRE · Platform · DevOps",
   description:
-    "Production-grade platforms on AWS/GCP/Azure. Deep dives on Kubernetes reliability, Terraform, Kafka, observability — and a live SRE knowledge assistant.",
+    "SRE and Platform Engineer working with Kubernetes, Terraform, Kafka, and multi-cloud. Writing about reliability, automation, and the things that actually break in production.",
 };
 
-const FEATURED_PIECES = [
+const ARTICLES = [
   {
     section: "Thinking",
-    title: "Dashboards lie unless you define the question first",
-    teaser: "Teams add Grafana, import the 10,000-star Kubernetes dashboard, and call it observability. Six months later, nobody knows which panel to look at during an incident.",
+    title: "Why your dashboard isn't actually observability",
+    teaser: "A beautiful Grafana board with 200 panels is not the same as knowing if your service is healthy. Here's the difference.",
     href: "/thinking#piece-01",
     tag: "observability",
   },
   {
     section: "Thinking",
-    title: "\"Alerts are bad\" is lazy — bad alerts are bad",
-    teaser: "The problem was never alerting. It was alerting without ownership, alerting on symptoms without context, and thresholds set by someone who left two years ago.",
+    title: "Good alerts vs bad alerts. It's not the same thing",
+    teaser: "Deleting 90% of your alerts doesn't fix the problem. Ownership and SLOs do.",
     href: "/thinking#piece-03",
     tag: "on-call",
   },
   {
     section: "Workflows",
-    title: "Kubernetes rollouts: promote on SLOs, not on \"pods are Ready\"",
-    teaser: "Readiness is a local signal. A rollout can be 100% Ready while P95 latency and error-rate spike — bad cache warmup, noisy neighbor, DB pressure.",
+    title: "Kubernetes rollouts: don't trust \"pods are Ready\"",
+    teaser: "A pod can be Ready and still be causing a 40% error rate. Here's how to actually gate a rollout.",
     href: "/workflows#k8s-rollouts",
     tag: "kubernetes",
   },
   {
     section: "Workflows",
-    title: "Terraform DAGs aren't deterministic at scale — your abstractions are",
-    teaser: "The graph is great at parallelism, not safety. The sharp edges show up when the graph gets wide: mono-repos, shared modules, 100+ resources in one state.",
+    title: "Terraform at scale breaks in predictable ways",
+    teaser: "Wide dependency graphs, surprise destroys, overused depends_on and how to avoid all of them.",
     href: "/workflows#terraform-dag",
     tag: "terraform",
   },
   {
     section: "Insights",
-    title: "Observability is a label strategy problem disguised as a tooling problem",
-    teaser: "Teams add more metrics and still can't answer: which customer segment is broken, or which rollout caused it. The cardinality is wrong in the places that matter.",
+    title: "Observability is a labeling problem, not a tooling problem",
+    teaser: "You can have Prometheus, Grafana, and OTel all running and still not know which customer is broken.",
     href: "/insights#observability-labels",
     tag: "prometheus",
   },
   {
     section: "Insights",
-    title: "AIOps isn't auto-healing — it's faster, safer incident reasoning",
-    teaser: "If the model can't show evidence behind a hypothesis, it becomes hallucination-as-a-service. The danger is a confident wrong answer at 2am sending you the wrong direction.",
+    title: "AIOps should help you think faster, not replace thinking",
+    teaser: "Auto-remediation without guardrails is just a faster way to make things worse at 2am.",
     href: "/insights#aiops-reasoning",
     tag: "aiops",
   },
 ];
 
-const STRENGTHS = [
-  { id: "K8S", name: "Kubernetes", href: "/kubernetes", desc: "EKS/GKE ops with real on-call ownership. HPA/VPA, RBAC/IRSA, PDBs, readiness gates, canary deploys, upgrade playbooks." },
-  { id: "TF", name: "Terraform", href: "/terraform", desc: "Modules, remote state, CI gating, drift control, guardrails. IaC with production discipline baked in." },
-  { id: "MSQ", name: "Kafka", href: "/kafka", desc: "Consumer lag, partitions, DLQ, retries, safe rollouts. Debugging streaming reliability at scale." },
-  { id: "OBS", name: "Observability", href: "/sre-intel", desc: "Prometheus / Grafana / OTel. SLO-based paging, alert hygiene, ownership routing." },
-  { id: "PY", name: "Python Automation", href: "/automation", desc: "Scripts and APIs for migration, validation, and ops toil reduction." },
-  { id: "CLD", name: "Cloud (AWS/GCP/Azure)", href: "/cloud", desc: "HA design, security controls, cost optimization across all three major clouds." },
+const SKILLS = [
+  {
+    icon: "⚙️",
+    name: "Kubernetes",
+    href: "/kubernetes",
+    bullets: ["EKS and GKE in production", "Autoscaling, upgrades, RBAC", "Canary deploys and rollbacks", "On-call incident ownership"],
+  },
+  {
+    icon: "🏗️",
+    name: "Terraform",
+    href: "/terraform",
+    bullets: ["Reusable modules and remote state", "CI/CD gating and drift detection", "Guardrails and policy enforcement", "Cross-team IaC patterns"],
+  },
+  {
+    icon: "📨",
+    name: "Kafka",
+    href: "/kafka",
+    bullets: ["Consumer lag and DLQ patterns", "Partition strategy and retries", "Safe broker rolling restarts", "Streaming reliability debugging"],
+  },
+  {
+    icon: "📊",
+    name: "Observability",
+    href: "/sre-intel",
+    bullets: ["Prometheus, Grafana, OpenTelemetry", "SLO design and error budgets", "Alert hygiene and ownership", "Reducing on-call noise"],
+  },
+  {
+    icon: "🐍",
+    name: "Python Automation",
+    href: "/automation",
+    bullets: ["Migration and validation scripts", "API tooling for infra ops", "Toil reduction tooling", "Retry and idempotency patterns"],
+  },
+  {
+    icon: "☁️",
+    name: "Cloud",
+    href: "/cloud",
+    bullets: ["AWS, GCP and Azure", "HA architecture and multi-AZ", "Cost optimization", "Security and IAM controls"],
+  },
 ];
 
 export default function Home() {
   return (
     <main>
-      {/* ── HERO ── */}
+      {/* HERO */}
       <section className="hero">
-        <div className="hero-inner hero-two-col">
+        <div className="hero-inner">
           <div className="hero-content">
-            <div className="hero-eyebrow">Site Reliability · Platform Engineering · DevOps</div>
+            <div className="hero-label">SRE · Platform Engineering · DevOps</div>
             <h1 className="hero-name">Neeraja<br />Khanapure</h1>
-            <p className="hero-role">SRE // Platform // DevOps</p>
+            <p className="hero-role">Making production systems reliable, one incident at a time ☀️</p>
             <p className="hero-desc">
-              I design, migrate, and operate <strong>production-grade platforms</strong> on
-              AWS / GCP / Azure. I write about Kubernetes reliability, Terraform patterns,
-              and the <strong>non-obvious failure modes</strong> that show up at scale.
+              I work on cloud infrastructure, Kubernetes platforms, and streaming systems.
+              On this site I share what I&apos;ve learned, the patterns that work,
+              and the things that quietly break at scale.
             </p>
             <div className="hero-btns">
               <Link href="/thinking" className="btn-primary">Read the thinking pieces</Link>
-              <Link href="/sre-intel" className="btn-ghost">✦ Ask SRE Intel</Link>
+              <Link href="/sre-intel" className="btn-outline">Ask SRE Intel ✦</Link>
             </div>
-            <div className="hero-stack">
-              {["Kubernetes", "Terraform", "Kafka", "AWS · GCP · Azure", "Python", "Prometheus · Grafana · OTel", "CI/CD", "RBAC · IRSA"].map((s) => (
-                <span key={s} className="stack-chip">{s}</span>
+            <div className="hero-chips">
+              {["Kubernetes", "Terraform", "Kafka", "AWS · GCP · Azure", "Python", "Prometheus", "Grafana", "OpenTelemetry"].map((s) => (
+                <span key={s} className="chip">{s}</span>
               ))}
             </div>
           </div>
-          {/* Profile photo — drop public/profile.jpg into the repo to show your photo */}
           <ProfilePhoto />
         </div>
       </section>
 
-      {/* ── FEATURED WRITING ── */}
+      {/* WRITING */}
       <section>
         <div className="sw">
-          <div className="sh">
-            <span className="sn">Reading</span>
-            <h2 className="st">What you'll find here</h2>
-          </div>
-          <p className="section-sub">
-            Not a CV dressed up as a website. Each piece is a production pattern, judgment call,
-            or failure mode — written to be useful to someone debugging something right now.
+          <div className="section-label">Writing</div>
+          <h2 className="section-title">Things I&apos;ve figured out</h2>
+          <p className="section-desc">
+            Short reads on Kubernetes, Terraform, observability, and reliability.
+            Written from production experience, not from docs.
           </p>
-          <div className="featured-grid">
-            {FEATURED_PIECES.map((p) => (
-              <Link key={p.href} href={p.href} className="featured-card">
-                <div className="featured-section">{p.section}</div>
-                <div className="featured-title">{p.title}</div>
-                <div className="featured-teaser">{p.teaser}</div>
-                <div className="featured-footer">
-                  <span className="tag">{p.tag}</span>
-                  <span className="featured-read">Read →</span>
+          <div className="articles-grid">
+            {ARTICLES.map((a) => (
+              <Link key={a.href} href={a.href} className="article-card">
+                <div className="article-section">{a.section}</div>
+                <div className="article-title">{a.title}</div>
+                <div className="article-teaser">{a.teaser}</div>
+                <div className="article-footer">
+                  <span className="article-tag">{a.tag}</span>
+                  <span className="article-read">Read →</span>
                 </div>
               </Link>
             ))}
           </div>
-
-          <div className="content-nav">
-            <Link href="/thinking" className="content-nav-item">
-              <span className="content-nav-label">How I Think</span>
-              <span className="content-nav-desc">5 judgment pieces on SRE tradeoffs</span>
+          <div className="content-tiles">
+            <Link href="/thinking" className="content-tile">
+              <span className="tile-label">📝 How I Think</span>
+              <span className="tile-desc">5 pieces on SRE tradeoffs</span>
             </Link>
-            <Link href="/workflows" className="content-nav-item">
-              <span className="content-nav-label">Production Workflows</span>
-              <span className="content-nav-desc">Terraform, K8s, MLOps, CI/CD patterns</span>
+            <Link href="/workflows" className="content-tile">
+              <span className="tile-label">🔧 Workflows</span>
+              <span className="tile-desc">K8s, Terraform, MLOps, CI/CD</span>
             </Link>
-            <Link href="/insights" className="content-nav-item">
-              <span className="content-nav-label">Insights</span>
-              <span className="content-nav-desc">CI/CD reliability, observability, AIOps</span>
+            <Link href="/insights" className="content-tile">
+              <span className="tile-label">💡 Insights</span>
+              <span className="tile-desc">Observability, CI/CD, AIOps</span>
             </Link>
-            <Link href="/engagement" className="content-nav-item">
-              <span className="content-nav-label">Engagement Picks</span>
-              <span className="content-nav-desc">Weekly curated SRE reads</span>
+            <Link href="/engagement" className="content-tile">
+              <span className="tile-label">🔖 Weekly Picks</span>
+              <span className="tile-desc">Curated SRE reads</span>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── SRE INTEL CTA ── */}
-      <section className="section-alt">
+      {/* SKILLS */}
+      <section className="section-warm">
         <div className="sw">
-          <div className="sre-intel-cta">
-            <div className="sre-intel-cta-left">
-              <div className="sre-intel-badge">SRE Intel</div>
-              <h2 className="sre-intel-title">Ask a production question</h2>
-              <p className="sre-intel-desc">
-                A live SRE knowledge assistant — ask about Kubernetes debugging, Terraform guardrails,
-                Kafka lag, SLO design, or anything in the SRE/platform space.
-                Gets specific. Doesn&apos;t summarize the docs.
+          <div className="section-label">Skills</div>
+          <h2 className="section-title">What I work on</h2>
+          <p className="section-desc">
+            Each area has its own page with real patterns, examples, and case studies.
+          </p>
+          <div className="skills-grid">
+            {SKILLS.map((s) => (
+              <Link key={s.name} href={s.href} className="skill-card">
+                <span className="skill-icon">{s.icon}</span>
+                <div className="skill-name">{s.name}</div>
+                <ul className="skill-bullets">
+                  {s.bullets.map((b) => <li key={b}>{b}</li>)}
+                </ul>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SRE INTEL */}
+      <section>
+        <div className="sw">
+          <div className="intel-cta">
+            <div>
+              <div className="intel-pill">SRE Intel ✦ Live</div>
+              <h2 className="intel-title">Have a production question?<br />Ask it here.</h2>
+              <p className="intel-desc">
+                SRE Intel is an AI assistant trained on production SRE patterns.
+                Ask about Kubernetes debugging, Terraform state issues, Kafka lag,
+                SLO design, you get a specific answer, not a documentation link.
               </p>
-              <div className="sre-example-qs">
+              <div className="intel-qs">
                 {[
-                  "How do I fix HPA thrashing on EKS?",
-                  "Safe Kubernetes upgrade checklist?",
-                  "Terraform drift detection patterns?",
-                  "Design an SLO for a payment API",
+                  "How do I fix HPA thrashing?",
+                  "Safe K8s upgrade checklist?",
+                  "Kafka consumer lag, where to start?",
+                  "How to design an SLO?",
                 ].map((q) => (
-                  <span key={q} className="sre-example-q">{q}</span>
+                  <span key={q} className="intel-q">{q}</span>
                 ))}
               </div>
               <Link href="/sre-intel" className="btn-primary" style={{ marginTop: "1.5rem", display: "inline-flex" }}>
                 Open SRE Intel →
               </Link>
             </div>
-            <div className="sre-intel-cta-preview">
+            <div className="intel-preview">
               <div className="preview-msg preview-user">
                 How do I fix HPA thrashing on EKS?
               </div>
               <div className="preview-msg preview-ai">
-                HPA thrashing comes from a few sources — usually mis-sized requests/limits, cooldown misconfiguration, or using the wrong metric source.<br /><br />
-                Start with <code>--horizontal-pod-autoscaler-downscale-stabilization</code> (default 5m — often too aggressive). Then check that CPU requests reflect actual steady-state usage, not peak…
+                Usually mis-sized CPU requests or the downscale window being too short.
+                <br /><br />
+                Start with <code>--horizontal-pod-autoscaler-downscale-stabilization</code>, default is 5m, often too aggressive. Then check that CPU requests match actual steady-state usage, not peak. HPA scales against requests, not limits.
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── SKILLS + EVIDENCE ── */}
-      <section>
+      {/* RESOURCES */}
+      <section className="section-warm">
         <div className="sw">
-          <div className="sh">
-            <span className="sn">Evidence</span>
-            <h2 className="st">Skills, backed by proof</h2>
-          </div>
-          <p className="section-sub">
-            Every skill maps to a page with real patterns and artifacts — not a bullet list.
-          </p>
-          <div className="strengths-grid">
-            {STRENGTHS.map((s) => (
-              <Link key={s.id} href={s.href} className="sc">
-                <div className="sc-id">{s.id} //</div>
-                <div className="sc-name">{s.name}</div>
-                <div className="sc-desc">{s.desc}</div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── WEEKLY SIGNAL ── */}
-      <section className="section-alt">
-        <div className="sw">
-          <div className="sh">
-            <span className="sn">Signal</span>
-            <h2 className="st">Stay current</h2>
-          </div>
+          <div className="section-label">Stay current</div>
+          <h2 className="section-title">Weekly signal</h2>
           <div className="signal-grid">
             <Link href="/engagement" className="signal-card">
-              <div className="signal-icon">✦</div>
-              <div className="signal-title">Engagement Picks</div>
+              <div className="signal-emoji">📬</div>
+              <div className="signal-name">Engagement Picks</div>
               <div className="signal-desc">
-                Weekly curated SRE / DevOps / Platform reads with a short &ldquo;why I care&rdquo;.
-                High-signal, low-noise. Updated every Monday.
+                Every week I pick 5 SRE and DevOps reads and explain why they matter.
+                Updated Mondays.
               </div>
-              <div className="signal-cta">Browse the archive →</div>
+              <div className="signal-link">Browse archive →</div>
             </Link>
             <Link href="/open-source" className="signal-card">
-              <div className="signal-icon">⌥</div>
-              <div className="signal-title">Open Source Picks</div>
+              <div className="signal-emoji">🌱</div>
+              <div className="signal-name">Open Source Picks</div>
               <div className="signal-desc">
-                Monthly curated OSS projects across SRE, infra, security, and data tooling.
-                Good-first-issues highlighted. Updated every month.
+                Monthly list of OSS projects worth watching, Kubernetes, Prometheus,
+                Terraform, and more. Good first issues included.
               </div>
-              <div className="signal-cta">Browse the picks →</div>
+              <div className="signal-link">Browse picks →</div>
             </Link>
             <Link href="/resources" className="signal-card">
-              <div className="signal-icon">◈</div>
-              <div className="signal-title">Resources</div>
+              <div className="signal-emoji">📚</div>
+              <div className="signal-name">Resources</div>
               <div className="signal-desc">
-                Curated SRE/Platform reading list — evergreen references plus weekly fresh
-                links from AWS, CNCF, Grafana, and HashiCorp.
+                My go-to SRE reading list, Google SRE book, EKS best practices,
+                Prometheus docs, and more. Refreshed weekly.
               </div>
-              <div className="signal-cta">Browse resources →</div>
+              <div className="signal-link">Browse resources →</div>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── CONTACT ── */}
+      {/* CONTACT */}
       <section>
         <div className="sw">
-          <div className="sh">
-            <span className="sn">Contact</span>
-            <h2 className="st">Get in touch</h2>
-          </div>
+          <div className="section-label">Say hello</div>
+          <h2 className="section-title">Let&apos;s connect</h2>
           <div className="contact-grid">
-            <div className="contact-intro">
+            <div className="contact-text">
               <p>
-                Actively looking for SRE, Platform Engineering, and DevOps roles. If you&apos;re
-                building reliable platforms and need someone with production Kubernetes, cloud,
-                and streaming experience — let&apos;s talk.
+                I&apos;m open to SRE, Platform Engineering, and DevOps roles —
+                especially teams building something interesting on Kubernetes or multi-cloud.
               </p>
               <p>
-                If you found any of the content useful, I&apos;d also love to hear which piece —
-                it helps me know what to write more of.
+                If you read something here that was useful, I&apos;d love to hear about it.
+                And if you have a production problem I might be able to help with, reach out.
               </p>
-              <div className="open-badge">Open to new opportunities</div>
+              <div className="open-badge">Open to new roles</div>
             </div>
-            <div className="contact-cards">
-              <a href="https://github.com/nk09" target="_blank" rel="noopener noreferrer" className="cc">
-                <div className="cc-icon">GH</div>
-                <div><div className="cc-label">GitHub</div><div className="cc-val">github.com/nk09</div></div>
+            <div className="contact-links">
+              <a href="https://github.com/nk09" target="_blank" rel="noopener noreferrer" className="contact-link">
+                <div className="contact-link-icon">🐙</div>
+                <div>
+                  <div className="contact-link-label">GitHub</div>
+                  <div className="contact-link-val">github.com/nk09</div>
+                </div>
               </a>
-              <a href="/resume.pdf" target="_blank" className="cc">
-                <div className="cc-icon">CV</div>
-                <div><div className="cc-label">Resume</div><div className="cc-val">Download PDF ↗</div></div>
+              <a href="/resume.pdf" target="_blank" className="contact-link">
+                <div className="contact-link-icon">📄</div>
+                <div>
+                  <div className="contact-link-label">Resume</div>
+                  <div className="contact-link-val">Download PDF</div>
+                </div>
               </a>
-              <Link href="/workflows" className="cc">
-                <div className="cc-icon">→</div>
-                <div><div className="cc-label">Production Workflows</div><div className="cc-val">Terraform, K8s, MLOps patterns</div></div>
+              <Link href="/sre-intel" className="contact-link">
+                <div className="contact-link-icon">✦</div>
+                <div>
+                  <div className="contact-link-label">SRE Intel</div>
+                  <div className="contact-link-val">Ask a production question</div>
+                </div>
               </Link>
-              <Link href="/sre-intel" className="cc">
-                <div className="cc-icon">✦</div>
-                <div><div className="cc-label">SRE Intel</div><div className="cc-val">Live SRE knowledge assistant</div></div>
+              <Link href="/engagement" className="contact-link">
+                <div className="contact-link-icon">📬</div>
+                <div>
+                  <div className="contact-link-label">Weekly Picks</div>
+                  <div className="contact-link-val">SRE reads every Monday</div>
+                </div>
               </Link>
             </div>
           </div>

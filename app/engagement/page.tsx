@@ -34,7 +34,7 @@ const SEED_WEEKS: EngagementWeek[] = [
         why: "The in-place pod resize feature finally stabilizes. If you run HPA + VPA together you'll want to read the interaction notes carefully before upgrading.",
       },
       {
-        title: "Grafana 11 Alert State History — How It Works Under the Hood",
+        title: "Grafana 11 Alert State History, How It Works Under the Hood",
         link: "https://grafana.com/blog/",
         why: "Alert state history now writes to a dedicated time-series store. This changes how you think about alert flap detection and long-term trend queries.",
       },
@@ -71,9 +71,9 @@ const SEED_WEEKS: EngagementWeek[] = [
         why: "The init container lifecycle and sidecar renewal loop are frequently misunderstood. This clears up why secrets go stale on long-running pods.",
       },
       {
-        title: "Kafka 3.8: KRaft Is Now the Default — What Changes",
+        title: "Kafka 3.8: KRaft Is Now the Default, What Changes",
         link: "https://kafka.apache.org/",
-        why: "ZooKeeper removal changes your ops runbook significantly — broker discovery, partition reassignment, and rolling restart procedures all need updating.",
+        why: "ZooKeeper removal changes your ops runbook significantly. Broker discovery, partition reassignment, and rolling restart procedures all need updating.",
       },
     ],
   },
@@ -159,7 +159,7 @@ export default async function EngagementPage() {
           <h1 className="page-title">Engagement Picks</h1>
           <p className="page-sub">
             Curated weekly reads with a short, opinionated &ldquo;why I care&rdquo;.
-            DevOps / SRE / MLOps / AIOps — high-signal, low-noise.
+            DevOps / SRE / MLOps / AIOps, high-signal, low-noise.
           </p>
           {!isLive && (
             <div className="seed-notice">
@@ -172,7 +172,7 @@ export default async function EngagementPage() {
           )}
           {isLive && (
             <div className="live-notice">
-              ✓ Live — updated weekly via the{" "}
+              ✓ Live, updated weekly via the{" "}
               <a href="https://github.com/nk09/neeraja-public-posts" target="_blank" rel="noopener noreferrer">
                 AI engagement agent
               </a>

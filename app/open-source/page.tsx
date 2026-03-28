@@ -33,8 +33,8 @@ const SEED_MONTHS: OSSMonth[] = [
         repo: "kubernetes/kubernetes",
         repoUrl: "https://github.com/kubernetes/kubernetes",
         category: "Infra / Kubernetes",
-        what: "The upstream Kubernetes repo — SIG-Node, SIG-Scheduling, and SIG-Autoscaling have active good-first-issues.",
-        whyCare: "Contributing here teaches you how the scheduler and kubelet actually make decisions — invaluable for debugging production issues.",
+        what: "The upstream Kubernetes repo, SIG-Node, SIG-Scheduling, and SIG-Autoscaling have active good-first-issues.",
+        whyCare: "Contributing here teaches you how the scheduler and kubelet actually make decisions, invaluable for debugging production issues.",
       },
       {
         repo: "prometheus/prometheus",
@@ -61,7 +61,7 @@ const SEED_MONTHS: OSSMonth[] = [
         repo: "open-telemetry/opentelemetry-collector",
         repoUrl: "https://github.com/open-telemetry/opentelemetry-collector",
         category: "SRE / Observability",
-        what: "The OTel Collector — the pipeline between your instrumentation and your backend.",
+        what: "The OTel Collector, the pipeline between your instrumentation and your backend.",
         whyCare: "Active contributor community. Understanding the processor/exporter model helps you build better telemetry pipelines.",
       },
     ],
@@ -75,7 +75,7 @@ const SEED_MONTHS: OSSMonth[] = [
         repoUrl: "https://github.com/kubeflow/kubeflow",
         category: "MLOps / AIOps",
         what: "ML platform on Kubernetes. Pipeline orchestration and model serving components.",
-        whyCare: "Bridges SRE skills with ML platform work — growing demand for this intersection.",
+        whyCare: "Bridges SRE skills with ML platform work, growing demand for this intersection.",
       },
       {
         repo: "argoproj/argo-cd",
@@ -89,7 +89,7 @@ const SEED_MONTHS: OSSMonth[] = [
         repoUrl: "https://github.com/cert-manager/cert-manager",
         category: "Security / Infra",
         what: "Certificate management for Kubernetes. ACME, vault, and private CA integrations.",
-        whyCare: "Good-first-issues around controller logic. Certificate rotation is a real production pain — understanding this pays dividends.",
+        whyCare: "Good-first-issues around controller logic. Certificate rotation is a real production pain, understanding this pays dividends.",
       },
     ],
   },
@@ -182,7 +182,7 @@ export default async function OpenSourcePage() {
         <div className="page-header">
           <h1 className="page-title">Open Source Picks</h1>
           <p className="page-sub">
-            Monthly curated OSS projects worth tracking — SRE, infra, security, and data tooling.
+            Monthly curated OSS projects worth tracking, SRE, infra, security, and data tooling.
             Opinionated, low-noise. Good-first-issues highlighted.
           </p>
           {!isLive && (
@@ -196,7 +196,7 @@ export default async function OpenSourcePage() {
           )}
           {isLive && (
             <div className="live-notice">
-              ✓ Live — updated monthly via the{" "}
+              ✓ Live, updated monthly via the{" "}
               <a href="https://github.com/nk09/neeraja-public-posts" target="_blank" rel="noopener noreferrer">
                 AI engagement agent
               </a>
