@@ -41,23 +41,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
-/* ─── Cursor: tiny terracotta bindi dot ─── */
-* { cursor: none !important; }
-.cursor-dot {
-  width: 8px; height: 8px;
-  background: var(--terra);
-  border-radius: 50%;
-  position: fixed; top: 0; left: 0;
-  pointer-events: none; z-index: 9999;
-  transform: translate(-50%,-50%);
-  transition: transform 0.07s linear, width 0.18s, height 0.18s, background 0.18s;
-  box-shadow: 0 0 0 2px rgba(192,82,42,0.18);
-}
-.cursor-dot.hovered {
-  width: 13px; height: 13px;
-  background: var(--saffron);
-  box-shadow: 0 0 0 3px rgba(232,140,26,0.2);
-}
+/* Cursor: default browser arrow restored */
 
 /* ─── Body ─── */
 body {
