@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ProfilePhoto from "../components/ProfilePhoto";
 
 export const metadata = {
   title: "Neeraja Khanapure | SRE · Platform · DevOps",
@@ -85,30 +86,8 @@ export default function Home() {
               ))}
             </div>
           </div>
-          {/* Profile photo — replace /profile.jpg with your actual photo in public/ */}
-          <div className="hero-photo-wrap">
-            <div className="hero-photo-ring hero-photo-ring-outer" />
-            <div className="hero-photo-ring hero-photo-ring-inner" />
-            <div className="hero-photo-frame">
-              <img
-                src="/profile.jpg"
-                alt="Neeraja Khanapure"
-                className="hero-photo"
-                onError={(e) => {
-                  // Fallback initials avatar if photo not found
-                  const target = e.currentTarget as HTMLImageElement;
-                  target.style.display = "none";
-                  const parent = target.parentElement;
-                  if (parent && !parent.querySelector(".hero-photo-fallback")) {
-                    const fb = document.createElement("div");
-                    fb.className = "hero-photo-fallback";
-                    fb.textContent = "NK";
-                    parent.appendChild(fb);
-                  }
-                }}
-              />
-            </div>
-          </div>
+          {/* Profile photo — drop public/profile.jpg into the repo to show your photo */}
+          <ProfilePhoto />
         </div>
       </section>
 
