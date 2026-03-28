@@ -1,0 +1,64 @@
+name: resources_sync
+
+on:
+  schedule:
+    - cron: "0 10 * * 0"   # Sun 10:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install -r requirements.txt
+
+      - run: python agent/resources_sync.py
+
+      - name: Ensure GH_PAT is available
+        run: |
+          if [ -z "${{ secrets.GH_PAT }}" ]; then
+            echo "GH_PAT secret missing/empty."
+            exit 1
+          fi
+
+      - name: Checkout portfolio
+        uses: actions/checkout@v4
+        with:
+          repository: nk09/neeraja-portfolio
+          path: portfolio
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Update resources block
+        run: |
+          # Write to the correct Next.js app router path
+          mkdir -p portfolio/app/resources/_generated
+          cp resources_block.html portfolio/app/resources/_generated/weekly.html
+          echo "Wrote to portfolio/app/resources/_generated/weekly.html"
+
+      - name: Commit & PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GH_PAT }}
+          path: portfolio
+          commit-message: "chore: update weekly resources (${{ github.run_id }})"
+          title: "chore: update weekly resources"
+          branch: "auto/resources-${{ github.run_id }}"
+          body: |
+            Automated weekly resources sync from neeraja-public-posts.
+            
+            This PR updates `app/resources/_generated/weekly.html` with fresh links
+            from AWS, Grafana, CNCF, Prometheus, HashiCorp, and HuggingFace feeds.
+            
+            Review the links then merge — the `/resources` page will show them immediately.

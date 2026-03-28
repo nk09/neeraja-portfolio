@@ -1,0 +1,61 @@
+name: engagement_picks
+
+on:
+  schedule:
+    - cron: "30 8 * * 1"   # Mon 08:30 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  issues: read
+
+jobs:
+  curate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install -r requirements.txt jinja2
+
+      - run: python agent/curate_trending.py
+
+      - name: Ensure GH_PAT exists
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "❌ GH_PAT secret missing."
+            exit 1
+          fi
+          echo "✅ GH_PAT detected"
+
+      - name: Ensure labels exist
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          gh label create "engagement" --description "Engagement-related picks" --color "0E8A16" --repo nk09/neeraja-public-posts || true
+          gh label create "picks" --description "Weekly picks" --color "5319E7" --repo nk09/neeraja-public-posts || true
+
+      - name: Create engagement issue via gh CLI
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          # Use engagement_picks.md (internal format with ### N) Title\nSource:\nSummary: pattern)
+          # The portfolio page parses this format to extract picks
+          gh issue create \
+            --title "Engagement Picks – Week of $(date +%Y-%m-%d)" \
+            --body-file engagement_picks.md \
+            --label engagement \
+            --label picks \
+            --repo nk09/neeraja-public-posts
+
+          # Also close it immediately so the portfolio API query (state=closed) picks it up
+          ISSUE_NUM=$(gh issue list --repo nk09/neeraja-public-posts --label engagement --label picks --state open --limit 1 --json number --jq '.[0].number')
+          if [ -n "$ISSUE_NUM" ]; then
+            gh issue close "$ISSUE_NUM" --repo nk09/neeraja-public-posts
+            echo "Closed issue #$ISSUE_NUM so it appears in the portfolio archive"
+          fi

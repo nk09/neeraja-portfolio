@@ -1,0 +1,57 @@
+name: open_source_picks
+
+on:
+  schedule:
+    - cron: "0 11 * * 6"   # Sat 11:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  picks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install -r requirements.txt
+
+      - run: python agent/open_source_picks.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          PORTFOLIO_BASE_URL: ${{ secrets.PORTFOLIO_BASE }}
+
+      - name: Ensure GH_PAT exists
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "❌ GH_PAT secret missing."
+            exit 1
+          fi
+
+      - name: Ensure open-source label exists
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          gh label create "open-source" --description "Open source picks" --color "1D76DB" --repo nk09/neeraja-public-posts || true
+
+      - name: Create open source issue
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          gh issue create \
+            --title "Open Source Picks – $(date +%Y-%m)" \
+            --body-file open_source_picks.md \
+            --label open-source \
+            --repo nk09/neeraja-public-posts
+
+          # Close immediately so portfolio archive (state=closed) picks it up
+          ISSUE_NUM=$(gh issue list --repo nk09/neeraja-public-posts --label open-source --state open --limit 1 --json number --jq '.[0].number')
+          if [ -n "$ISSUE_NUM" ]; then
+            gh issue close "$ISSUE_NUM" --repo nk09/neeraja-public-posts
+          fi
