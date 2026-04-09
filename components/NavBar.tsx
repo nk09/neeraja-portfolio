@@ -8,12 +8,20 @@ const links = [
   { href: "/engagement", label: "Engagement" },
   { href: "/open-source", label: "Open Source" },
   { href: "/evidence", label: "Evidence" },
+
   { href: "/kubernetes", label: "Kubernetes" },
   { href: "/terraform", label: "Terraform" },
   { href: "/kafka", label: "Kafka" },
   { href: "/cloud", label: "Cloud" },
   { href: "/automation", label: "Automation" },
   { href: "/thinking", label: "Thinking" },
+
+  // NEW PAGES ADDED
+  { href: "/ai-workflow", label: "AI Workflow" },
+  { href: "/incident-lab", label: "Incident Lab" },
+  { href: "/observability-dashboard", label: "Observability" },
+  { href: "/knowledge-graph", label: "Knowledge Graph" },
+  { href: "/architecture", label: "Architecture" },
 ];
 
 export default function NavBar() {
@@ -29,10 +37,15 @@ export default function NavBar() {
 
           <div className="hidden lg:flex items-center gap-4">
             {links.map((l) => (
-              <Link key={l.href} href={l.href} className="text-sm text-slate-300 hover:text-white transition">
+              <Link
+                key={l.href}
+                href={l.href}
+                className="text-sm text-slate-300 hover:text-white transition"
+              >
                 {l.label}
               </Link>
             ))}
+
             <a
               href="/resume.pdf"
               className="text-sm rounded-xl px-3 py-2 bg-white/10 border border-white/10 hover:bg-white/15 transition"
@@ -62,6 +75,7 @@ export default function NavBar() {
                 {l.label}
               </Link>
             ))}
+
             <a
               href="/resume.pdf"
               onClick={() => setOpen(false)}
