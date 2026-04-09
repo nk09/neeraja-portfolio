@@ -1,0 +1,8 @@
+{
+  "runs_last_7_days": 12,
+  "successful_runs": 11,
+  "failed_runs": 1,
+  "resources_generated": 9,
+  "insights_generated": 6,
+  "avg_generation_time_seconds": 4.2
+}
