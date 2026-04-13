@@ -8,12 +8,12 @@ export async function POST(req: Request) {
 
     if (!apiKey) {
       return NextResponse.json({
-        answer: "Gemini API key not configured."
+        answer: "Gemini API key missing."
       });
     }
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`,
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: {
@@ -28,13 +28,13 @@ export async function POST(req: Request) {
                   text: `You are SRE Intel, a production SRE assistant.
 
 Give practical answers for:
-- Kubernetes debugging
-- Terraform patterns
-- Kafka reliability
-- Observability (Prometheus, Grafana)
-- Cloud reliability engineering
+Kubernetes debugging
+Terraform patterns
+Kafka reliability
+Observability (Prometheus, Grafana)
+Cloud reliability engineering
 
-Avoid generic explanations. Give practical, opinionated answers like a senior SRE.
+Avoid generic explanations.
 
 Question:
 ${question}`
@@ -46,18 +46,18 @@ ${question}`
       }
     );
 
-    const data = await response.json();
+    const data = await res.json();
 
     const answer =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
       "No response generated.";
 
     return NextResponse.json({ answer });
-  } catch (error) {
-    console.error("SRE Intel error:", error);
+  } catch (err) {
+    console.error(err);
 
     return NextResponse.json({
-      answer: "Something went wrong while generating the response."
+      answer: "Something went wrong, please try again."
     });
   }
 }
