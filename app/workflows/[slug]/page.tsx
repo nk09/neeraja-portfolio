@@ -1,47 +1,5 @@
 import Link from "next/link";
-
-// URL of the auto-generated topics.json in the public-posts repo.
-// This file is updated automatically every Tuesday/Friday by GitHub Actions.
-const TOPICS_URL = "/topics.json";
-
-type WorkflowTopic = {
-  title: string;
-  summary: string;
-  why: string[];
-  rule: string;
-  tools: string[];
-  takeaway: string;
-  diagram: string;
-  tags: string[];
-  type: string;
-  slug: string;
-};
-
-type TopicsData = {
-  workflows: Record<string, WorkflowTopic>;
-  insights: Record<string, unknown>;
-};
-
-async function getWorkflow(slug: string): Promise<WorkflowTopic | null> {
-  try {
-    const res = await fetch(TOPICS_URL, {
-      next: { revalidate: 3600 }, // re-fetch at most once per hour
-    });
-    if (!res.ok) return null;
-    const data: TopicsData = await res.json();
-    return data.workflows?.[slug] ?? null;
-  } catch {
-    return null;
-  }
-}
-
-function titleFromSlug(slug: string): string {
-  return slug
-    .split("-")
-    .filter(Boolean)
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
-}
+import { getWorkflowBySlug, titleFromSlug } from "../../lib/topics";
 
 export default async function WorkflowDeepDivePage({
   params,
@@ -49,7 +7,7 @@ export default async function WorkflowDeepDivePage({
   params: { slug: string };
 }) {
   const { slug } = params;
-  const topic = await getWorkflow(slug);
+  const topic = await getWorkflowBySlug(slug);
   const title = topic?.title ?? titleFromSlug(slug);
   const repoUrl = "https://github.com/nk09/neeraja-public-posts";
   const searchUrl = `${repoUrl}/search?q=${encodeURIComponent(slug)}`;
@@ -59,7 +17,7 @@ export default async function WorkflowDeepDivePage({
       <main className="mx-auto max-w-3xl px-6 py-12">
         <div className="glass rounded-3xl p-8 sm:p-10">
           <p className="text-sm text-slate-300">Workflows</p>
-          <h1 className="mt-2 text-3xl sm:text-4xl font-extrabold leading-tight">
+          <h1 className="mt-2 text-3xl font-extrabold leading-tight sm:text-4xl">
             <span className="gradient-text">{title}</span>
           </h1>
           <p className="mt-4 text-slate-300">
@@ -67,13 +25,13 @@ export default async function WorkflowDeepDivePage({
             or find the original LinkedIn post below.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
-            <Link href="/" className="rounded-xl px-4 py-2 bg-white/10 border border-white/10 hover:bg-white/15 transition">
+            <Link href="/" className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 transition hover:bg-white/15">
               Back to Home
             </Link>
-            <Link href="/workflows" className="rounded-xl px-4 py-2 bg-white/10 border border-white/10 hover:bg-white/15 transition">
+            <Link href="/workflows" className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 transition hover:bg-white/15">
               All Workflows
             </Link>
-            <a href={searchUrl} target="_blank" rel="noopener noreferrer" className="rounded-xl px-4 py-2 bg-white/10 border border-white/10 hover:bg-white/15 transition">
+            <a href={searchUrl} target="_blank" rel="noopener noreferrer" className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 transition hover:bg-white/15">
               Find original post
             </a>
           </div>
@@ -87,7 +45,7 @@ export default async function WorkflowDeepDivePage({
       <div className="glass rounded-3xl p-8 sm:p-10">
         <p className="text-sm text-slate-300">Workflows</p>
 
-        <h1 className="mt-2 text-3xl sm:text-4xl font-extrabold leading-tight">
+        <h1 className="mt-2 text-3xl font-extrabold leading-tight sm:text-4xl">
           <span className="gradient-text">{title}</span>
         </h1>
 
@@ -96,7 +54,7 @@ export default async function WorkflowDeepDivePage({
         {topic.tags?.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">
             {topic.tags.map((tag) => (
-              <span key={tag} className="text-xs rounded-full px-3 py-1 bg-white/10 border border-white/10 text-slate-300">
+              <span key={tag} className="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs text-slate-300">
                 #{tag}
               </span>
             ))}
@@ -104,59 +62,54 @@ export default async function WorkflowDeepDivePage({
         )}
 
         <div className="mt-8 space-y-6">
-          {/* Diagram */}
           {topic.diagram && (
             <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <h2 className="text-slate-200 font-semibold">How it looks in practice</h2>
-              <pre className="mt-3 whitespace-pre-wrap rounded-xl bg-black/40 border border-white/10 p-4 text-xs text-slate-200 font-mono leading-relaxed">
+              <h2 className="font-semibold text-slate-200">How it looks in practice</h2>
+              <pre className="mt-3 whitespace-pre-wrap rounded-xl border border-white/10 bg-black/40 p-4 font-mono text-xs leading-relaxed text-slate-200">
                 {topic.diagram}
               </pre>
             </section>
           )}
 
-          {/* Where it breaks */}
           <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
-            <h2 className="text-slate-200 font-semibold">Where it breaks</h2>
-            <ul className="mt-3 list-disc pl-5 text-slate-300 space-y-2">
+            <h2 className="font-semibold text-slate-200">Where it breaks</h2>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-slate-300">
               {topic.why.map((x) => (
                 <li key={x}>{x}</li>
               ))}
             </ul>
           </section>
 
-          {/* The rule */}
           <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
-            <h2 className="text-slate-200 font-semibold">The rule</h2>
-            <p className="mt-3 text-slate-300 font-medium">→ {topic.rule}</p>
+            <h2 className="font-semibold text-slate-200">The rule</h2>
+            <p className="mt-3 font-medium text-slate-300">→ {topic.rule}</p>
           </section>
 
-          {/* How to sanity-check */}
           <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
-            <h2 className="text-slate-200 font-semibold">How to sanity-check it</h2>
-            <ul className="mt-3 list-disc pl-5 text-slate-300 space-y-2">
+            <h2 className="font-semibold text-slate-200">How to sanity-check it</h2>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-slate-300">
               {topic.tools.map((x) => (
                 <li key={x}>{x}</li>
               ))}
             </ul>
           </section>
 
-          {/* Takeaway */}
           {topic.takeaway && (
             <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <h2 className="text-slate-200 font-semibold">The bigger picture</h2>
-              <p className="mt-3 text-slate-300 italic">{topic.takeaway}</p>
+              <h2 className="font-semibold text-slate-200">The bigger picture</h2>
+              <p className="mt-3 italic text-slate-300">{topic.takeaway}</p>
             </section>
           )}
         </div>
 
         <div className="mt-10 flex flex-wrap gap-3">
-          <Link href="/" className="rounded-xl px-4 py-2 bg-white/10 border border-white/10 hover:bg-white/15 transition">
+          <Link href="/" className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 transition hover:bg-white/15">
             Back to Home
           </Link>
-          <Link href="/workflows" className="rounded-xl px-4 py-2 bg-white/10 border border-white/10 hover:bg-white/15 transition">
+          <Link href="/workflows" className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 transition hover:bg-white/15">
             All Workflows
           </Link>
-          <a href={searchUrl} target="_blank" rel="noopener noreferrer" className="rounded-xl px-4 py-2 bg-white/10 border border-white/10 hover:bg-white/15 transition">
+          <a href={searchUrl} target="_blank" rel="noopener noreferrer" className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 transition hover:bg-white/15">
             Related posts
           </a>
         </div>
