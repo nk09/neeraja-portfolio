@@ -83,7 +83,7 @@ export default function SreIntelPage() {
           <div className="sre-intel-meta">
             <div className="sre-meta-item">
               <span className="sre-meta-label">Powered by</span>
-              <span className="sre-meta-val">Claude (Anthropic)</span>
+              <span className="sre-meta-val">Google Gemini</span>
             </div>
             <div className="sre-meta-item">
               <span className="sre-meta-label">Domain</span>
