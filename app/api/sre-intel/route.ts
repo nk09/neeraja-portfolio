@@ -2,10 +2,8 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    // Parse request body once
     const body = await req.json();
 
-    // Support both formats: { message: "..."} or { messages: [...] }
     const messages =
       body.messages ?? [{ role: "user", content: body.message }];
 
@@ -16,7 +14,7 @@ export async function POST(req: Request) {
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           contents: [
@@ -43,7 +41,9 @@ ${question}`
       data?.candidates?.[0]?.content?.parts?.[0]?.text ??
       "No response generated.";
 
-    return NextResponse.json({ reply });
+    return NextResponse.json({
+      content: [{ type: "text", text: reply }]
+    });
 
   } catch (err) {
     console.error(err);
