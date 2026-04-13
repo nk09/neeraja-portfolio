@@ -8,11 +8,11 @@ export async function POST(req: Request) {
 
     if (!apiKey) {
       return NextResponse.json({
-        answer: "Gemini API key missing."
+        answer: "Gemini API key is missing."
       });
     }
 
-    const res = await fetch(
+    const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
@@ -27,14 +27,14 @@ export async function POST(req: Request) {
                 {
                   text: `You are SRE Intel, a production SRE assistant.
 
-Give practical answers for:
-Kubernetes debugging
-Terraform patterns
-Kafka reliability
-Observability (Prometheus, Grafana)
-Cloud reliability engineering
+Give practical answers about:
+- Kubernetes debugging
+- Terraform patterns
+- Kafka reliability
+- Observability (Prometheus, Grafana)
+- Cloud reliability engineering
 
-Avoid generic explanations.
+Avoid generic documentation summaries. Provide opinionated production advice.
 
 Question:
 ${question}`
@@ -46,15 +46,24 @@ ${question}`
       }
     );
 
-    const data = await res.json();
+    const data = await response.json();
+
+    // Log Gemini errors to Vercel logs
+    if (!response.ok) {
+      console.error("Gemini API error:", data);
+      return NextResponse.json({
+        answer: "AI service error. Check server logs."
+      });
+    }
 
     const answer =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      data?.candidates?.[0]?.content?.parts?.[0]?.text ??
       "No response generated.";
 
     return NextResponse.json({ answer });
-  } catch (err) {
-    console.error(err);
+
+  } catch (error) {
+    console.error("SRE Intel API error:", error);
 
     return NextResponse.json({
       answer: "Something went wrong, please try again."
