@@ -1,4 +1,5 @@
-const TOPICS_URL = "/topics.json";
+import { promises as fs } from "fs";
+import path from "path";
 
 export type WorkflowTopic = {
   title: string;
@@ -44,12 +45,9 @@ export function titleFromSlug(slug: string): string {
 
 async function loadTopics(): Promise<TopicsData | null> {
   try {
-    const res = await fetch(TOPICS_URL, {
-      next: { revalidate: 3600 },
-    });
-
-    if (!res.ok) return null;
-    return (await res.json()) as TopicsData;
+    const topicsPath = path.join(process.cwd(), "public", "topics.json");
+    const raw = await fs.readFile(topicsPath, "utf-8");
+    return JSON.parse(raw) as TopicsData;
   } catch {
     return null;
   }
