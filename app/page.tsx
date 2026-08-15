@@ -287,11 +287,11 @@ export default function Home() {
                   <div className="contact-link-val">github.com/nk09</div>
                 </div>
               </a>
-              <a href="/resume.pdf" target="_blank" className="contact-link">
-                <div className="contact-link-icon">📄</div>
+              <a href="https://www.linkedin.com/in/neerajakhanapure" target="_blank" rel="noopener noreferrer" className="contact-link">
+                <div className="contact-link-icon">💼</div>
                 <div>
-                  <div className="contact-link-label">Resume</div>
-                  <div className="contact-link-val">Download PDF</div>
+                  <div className="contact-link-label">LinkedIn</div>
+                  <div className="contact-link-val">Connect with me</div>
                 </div>
               </a>
               <Link href="/sre-intel" className="contact-link">
