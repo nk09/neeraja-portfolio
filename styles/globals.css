@@ -1010,3 +1010,9 @@ footer::before {
   padding-top: 2rem;
   border-top: 1.5px solid var(--border2);
 }
+
+/* Activity pulse */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}

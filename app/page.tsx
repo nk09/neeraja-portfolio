@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ProfilePhoto from "../components/ProfilePhoto";
+import GitHubActivity from "../components/GitHubActivity";
 
 export const metadata = {
   title: "Neeraja Khanapure | SRE · Platform · DevOps",
@@ -119,6 +120,9 @@ export default function Home() {
           <ProfilePhoto />
         </div>
       </section>
+
+      {/* GITHUB ACTIVITY */}
+      <GitHubActivity />
 
       {/* WRITING */}
       <section>
@@ -262,6 +266,15 @@ export default function Home() {
               </div>
               <div className="signal-link">Browse resources →</div>
             </Link>
+            <a href="https://dev.to/neeraja_khanapure_4a33a5f" target="_blank" rel="noopener noreferrer" className="signal-card">
+              <div className="signal-emoji">✍️</div>
+              <div className="signal-name">DEV.to Posts</div>
+              <div className="signal-desc">
+                SRE and DevOps insights published on DEV.to — incident
+                retrospectives, system design patterns, and production lessons.
+              </div>
+              <div className="signal-link">Read on DEV.to →</div>
+            </a>
           </div>
         </div>
       </section>
