@@ -6,9 +6,23 @@ export const metadata: Metadata = {
   title: "Neeraja Khanapure | SRE · Platform · DevOps",
   description:
     "SRE and Platform Engineer working with Kubernetes, Terraform, Kafka, and multi-cloud. Writing about reliability, automation, and what actually breaks in production.",
+  openGraph: {
+    type: "website",
+    title: "Neeraja Khanapure | SRE · Platform · DevOps",
+    description:
+      "SRE and Platform Engineer working with Kubernetes, Terraform, Kafka, and multi-cloud. Writing about reliability, automation, and what actually breaks in production.",
+    siteName: "Neeraja Khanapure",
+  },
+  twitter: {
+    card: "summary",
+    title: "Neeraja Khanapure | SRE · Platform · DevOps",
+    description:
+      "SRE and Platform Engineer working with Kubernetes, Terraform, Kafka, and multi-cloud. Writing about reliability, automation, and what actually breaks in production.",
+  },
 };
 
 const NAV_LINKS = [
+  { href: "/about", label: "About" },
   { href: "/thinking", label: "Thinking" },
   { href: "/workflows", label: "Workflows" },
   { href: "/insights", label: "Insights" },

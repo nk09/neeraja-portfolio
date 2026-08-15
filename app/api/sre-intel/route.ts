@@ -1,31 +1,11 @@
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
-  try {
-    const { question } = await req.json();
+interface Message {
+  role: "user" | "assistant";
+  content: string;
+}
 
-    const apiKey = process.env.GEMINI_API_KEY;
-
-    if (!apiKey) {
-      return NextResponse.json({
-        answer: "Gemini API key is missing."
-      });
-    }
-
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [
-                {
-                  text: `You are SRE Intel, a production SRE assistant.
+const SYSTEM_PROMPT = `You are SRE Intel, a production SRE assistant.
 
 Give practical answers about:
 - Kubernetes debugging
@@ -34,15 +14,48 @@ Give practical answers about:
 - Observability (Prometheus, Grafana)
 - Cloud reliability engineering
 
-Avoid generic documentation summaries. Provide opinionated production advice.
+Avoid generic documentation summaries. Provide opinionated production advice.`;
 
-Question:
-${question}`
-                }
-              ]
-            }
-          ]
-        })
+export async function POST(req: Request) {
+  try {
+    const { messages } = (await req.json()) as { messages: Message[] };
+
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+      return NextResponse.json({
+        content: [{ text: "Gemini API key is missing." }],
+      });
+    }
+
+    // Build Gemini contents array from conversation history.
+    // Skip the initial assistant greeting (first message) and prepend the
+    // system prompt to the first user message so Gemini gets context.
+    const contents: { role: string; parts: { text: string }[] }[] = [];
+
+    for (const msg of messages) {
+      // Skip the opening assistant greeting — it's UI-only
+      if (msg.role === "assistant" && contents.length === 0) continue;
+
+      const geminiRole = msg.role === "user" ? "user" : "model";
+      let text = msg.content;
+
+      // Prepend system prompt to the first user turn
+      if (geminiRole === "user" && contents.length === 0) {
+        text = `${SYSTEM_PROMPT}\n\nQuestion:\n${text}`;
+      }
+
+      contents.push({ role: geminiRole, parts: [{ text }] });
+    }
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ contents }),
       }
     );
 
@@ -52,7 +65,7 @@ ${question}`
     if (!response.ok) {
       console.error("Gemini API error:", data);
       return NextResponse.json({
-        answer: "AI service error. Check server logs."
+        content: [{ text: "AI service error. Check server logs." }],
       });
     }
 
@@ -60,13 +73,13 @@ ${question}`
       data?.candidates?.[0]?.content?.parts?.[0]?.text ??
       "No response generated.";
 
-    return NextResponse.json({ answer });
+    return NextResponse.json({ content: [{ text: answer }] });
 
   } catch (error) {
     console.error("SRE Intel API error:", error);
 
     return NextResponse.json({
-      answer: "Something went wrong, please try again."
+      content: [{ text: "Something went wrong, please try again." }],
     });
   }
 }

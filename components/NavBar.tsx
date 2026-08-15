@@ -16,12 +16,6 @@ const links = [
   { href: "/automation", label: "Automation" },
   { href: "/thinking", label: "Thinking" },
 
-  // NEW PAGES ADDED
-  { href: "/ai-workflow", label: "AI Workflow" },
-  { href: "/incident-lab", label: "Incident Lab" },
-  { href: "/observability-dashboard", label: "Observability" },
-  { href: "/knowledge-graph", label: "Knowledge Graph" },
-  { href: "/architecture", label: "Architecture" },
 ];
 
 export default function NavBar() {
