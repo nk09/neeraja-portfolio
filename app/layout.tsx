@@ -30,15 +30,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </li>
             ))}
           </ul>
-          <a className="nav-cta" href="/resume.pdf" target="_blank" rel="noopener noreferrer">
-            Resume ↗
+          <a className="nav-cta" href="https://www.linkedin.com/in/neerajakhanapure" target="_blank" rel="noopener noreferrer">
+            Connect ↗
           </a>
         </nav>
 
         {children}
 
         <footer>
-          <span>© 2025 Neeraja Khanapure</span>
+          <span>© 2026 Neeraja Khanapure</span>
           <span>Made with ☀️ · SRE · Platform · DevOps</span>
         </footer>
 </body>

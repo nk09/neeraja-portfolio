@@ -47,10 +47,12 @@ export default function NavBar() {
             ))}
 
             <a
-              href="/resume.pdf"
+              href="https://www.linkedin.com/in/neerajakhanapure"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-sm rounded-xl px-3 py-2 bg-white/10 border border-white/10 hover:bg-white/15 transition"
             >
-              Resume
+              Connect
             </a>
           </div>
 
@@ -77,11 +79,13 @@ export default function NavBar() {
             ))}
 
             <a
-              href="/resume.pdf"
+              href="https://www.linkedin.com/in/neerajakhanapure"
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setOpen(false)}
               className="text-sm text-slate-200 rounded-xl px-3 py-2 bg-white/5 border border-white/10 hover:bg-white/10 transition"
             >
-              Resume
+              Connect
             </a>
           </nav>
         )}

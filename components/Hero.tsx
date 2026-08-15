@@ -11,22 +11,13 @@ export default function Hero() {
           <span className="text-slate-200">DevOps & AI Engineer</span>
         </h1>
         <p className="mt-4 text-slate-300 max-w-2xl">
-          9+ years building secure, observable, highly-available platforms across AWS/GCP/Azure.
+          10+ years building secure, observable, highly-available platforms across AWS/GCP/Azure.
           Real-world work in Kubernetes (EKS/GKE), Terraform, Prometheus/Grafana, OpenTelemetry, and CI/CD.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <a href="https://www.linkedin.com/in/neerajakhanapure" target="_blank" rel="noopener noreferrer"
-             className="rounded-xl px-4 py-2 bg-white/10 border border-white/10 hover:bg-white/15 transition">
-            LinkedIn
-          </a>
-          {/* Use a robust Drive URL and open in a new tab */}
-          <a
-            href="/resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-xl px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:opacity-90 transition"
-          >
-            View Resume
+             className="rounded-xl px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:opacity-90 transition">
+            Connect on LinkedIn
           </a>
           <a
             href="/engagement"
