@@ -21,7 +21,7 @@ export default function EvidencePage() {
       <div className="sw-narrow">
         <div className="page-title">Skills → Evidence</div>
         <p className="page-sub">
-          I don't want this site to be a tool list. This page maps each skill to a proof artifact.
+          Every skill listed here links to a dedicated page with real patterns, examples, and production context.
         </p>
 
         <div className="skill-section">

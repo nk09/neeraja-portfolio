@@ -49,7 +49,7 @@ export async function POST(req: Request) {
     }
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: {
@@ -63,9 +63,9 @@ export async function POST(req: Request) {
 
     // Log Gemini errors to Vercel logs
     if (!response.ok) {
-      console.error("Gemini API error:", data);
+      console.error("Gemini API error:", JSON.stringify(data));
       return NextResponse.json({
-        content: [{ text: "AI service error. Check server logs." }],
+        content: [{ text: `AI service error: ${data?.error?.message || response.statusText || "unknown"}. Status: ${response.status}` }],
       });
     }
 

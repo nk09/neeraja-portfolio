@@ -159,6 +159,10 @@ export default function Home() {
               <span className="tile-label">🔖 Weekly Picks</span>
               <span className="tile-desc">Curated SRE reads</span>
             </Link>
+            <Link href="/evidence" className="content-tile">
+              <span className="tile-label">🎯 Evidence Map</span>
+              <span className="tile-desc">Skills backed by proof</span>
+            </Link>
           </div>
         </div>
       </section>
