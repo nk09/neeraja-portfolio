@@ -239,6 +239,18 @@
       ],
       "type": "workflow",
       "slug": "platform-engineering-the-paved-road-fails-when-it-paves-over-developer-autonomy"
+    },
+    "recoverystrategiestomeetdataresidencyrequirements": {
+      "title": "Recovery strategies to meet data residency requirements",
+      "summary": "Generated workflow post (2026-08-18)",
+      "tags": [
+        "devops",
+        "sre",
+        "kubernetes"
+      ],
+      "type": "workflow",
+      "slug": "recoverystrategiestomeetdataresidencyrequirements",
+      "date": "2026-08-18"
     }
   },
   "insights": {
@@ -381,6 +393,44 @@
       "diagram": "What 'zero downtime' actually requires:\n\n\u2713 Health checks reflect REAL readiness (not just 'process started')\n\u2713 Graceful shutdown drains in-flight requests (SIGTERM handling)\n\u2713 Connection draining at the load balancer (not just the pod)\n\u2713 Rollback faster than the deploy (< 5 min, automated)\n\u2713 SLI measurement during the rollout window (not just after)\n\nMissing any one of these = not zero downtime. Just unmonitored downtime.",
       "type": "insight",
       "slug": "zero-downtime-deployments-what-zero-actually-requires-most-teams-dont-have"
+    },
+    "aproductionlessononmonitoringalertdesignandoncallburnout": {
+      "title": "A production lesson on monitoring alert design and on-call burnout",
+      "summary": "Generated insight post (2026-08-21)",
+      "tags": [
+        "sre",
+        "observability",
+        "oncall",
+        "reliability"
+      ],
+      "type": "insight",
+      "slug": "aproductionlessononmonitoringalertdesignandoncallburnout",
+      "date": "2026-08-21"
     }
+  },
+  "_meta": {
+    "topic_areas": [
+      "Kubernetes cluster operations and failure patterns",
+      "Terraform and infrastructure-as-code at scale",
+      "observability strategy and OpenTelemetry in production",
+      "incident management and on-call culture",
+      "CI/CD pipeline reliability and deployment safety",
+      "cloud architecture cost optimization",
+      "Python automation for SRE workflows",
+      "team leadership and engineering culture in SRE",
+      "service mesh and network reliability",
+      "secrets management and security in platform engineering",
+      "capacity planning and autoscaling patterns",
+      "GitOps drift and configuration management",
+      "distributed tracing and debugging in microservices",
+      "SLOs, error budgets, and reliability conversations",
+      "platform engineering and developer experience",
+      "Kafka and event streaming reliability",
+      "monitoring alert design and on-call burnout",
+      "zero-downtime deployments and rollback strategies",
+      "runbook quality and operational documentation",
+      "feature flags as operational infrastructure"
+    ],
+    "count": 20
   }
 }
