@@ -275,6 +275,18 @@
       "type": "workflow",
       "slug": "closingtheaiagenttrustgapwithgraduatedautonomy",
       "date": "2026-09-01"
+    },
+    "kubernetesv137kubeletinusernamespaceakarootlessmodegraduatestobeta": {
+      "title": "Kubernetes v1.37: KubeletInUserNamespace (aka Rootless mode) Graduates to Beta",
+      "summary": "Generated workflow post (2026-09-08)",
+      "tags": [
+        "devops",
+        "sre",
+        "kubernetes"
+      ],
+      "type": "workflow",
+      "slug": "kubernetesv137kubeletinusernamespaceakarootlessmodegraduatestobeta",
+      "date": "2026-09-08"
     }
   },
   "insights": {
@@ -443,6 +455,32 @@
       "type": "insight",
       "slug": "aproductionlessononkafkaandeventstreamingreliability",
       "date": "2026-08-28"
+    },
+    "aproductionlessononobservabilitystrategyandopentelemetryinproduction": {
+      "title": "A production lesson on observability strategy and OpenTelemetry in production",
+      "summary": "Generated insight post (2026-09-04)",
+      "tags": [
+        "observability",
+        "sre",
+        "opentelemetry",
+        "monitoring"
+      ],
+      "type": "insight",
+      "slug": "aproductionlessononobservabilitystrategyandopentelemetryinproduction",
+      "date": "2026-09-04"
+    },
+    "aproductionlessonongitopsdriftandconfigurationmanagement": {
+      "title": "A production lesson on GitOps drift and configuration management",
+      "summary": "Generated insight post (2026-09-11)",
+      "tags": [
+        "gitops",
+        "kubernetes",
+        "devops",
+        "platformengineering"
+      ],
+      "type": "insight",
+      "slug": "aproductionlessonongitopsdriftandconfigurationmanagement",
+      "date": "2026-09-11"
     }
   },
   "_meta": {
