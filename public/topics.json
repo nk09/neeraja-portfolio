@@ -275,6 +275,90 @@
       "type": "workflow",
       "slug": "closingtheaiagenttrustgapwithgraduatedautonomy",
       "date": "2026-09-01"
+    },
+    "kubernetesv137kubeletinusernamespaceakarootlessmodegraduatestobeta": {
+      "title": "Kubernetes v1.37: KubeletInUserNamespace (aka Rootless mode) Graduates to Beta",
+      "summary": "Generated workflow post (2026-09-08)",
+      "tags": [
+        "devops",
+        "sre",
+        "kubernetes"
+      ],
+      "type": "workflow",
+      "slug": "kubernetesv137kubeletinusernamespaceakarootlessmodegraduatestobeta",
+      "date": "2026-09-08"
+    },
+    "buildingresilientrealtimestreamingworkerswithamazondynamodbleases": {
+      "title": "Building resilient real-time streaming workers with Amazon DynamoDB leases",
+      "summary": "Generated workflow post (2026-09-15)",
+      "tags": [
+        "devops",
+        "sre",
+        "kubernetes"
+      ],
+      "type": "workflow",
+      "slug": "buildingresilientrealtimestreamingworkerswithamazondynamodbleases",
+      "date": "2026-09-15"
+    },
+    "opentelemetrygologsapiandsdkreachreleasecandidatestatus": {
+      "title": "OpenTelemetry Go Logs API and SDK reach release candidate status",
+      "summary": "Generated workflow post (2026-09-22)",
+      "tags": [
+        "devops",
+        "sre",
+        "kubernetes"
+      ],
+      "type": "workflow",
+      "slug": "opentelemetrygologsapiandsdkreachreleasecandidatestatus",
+      "date": "2026-09-22"
+    },
+    "kubernetesv137podlevelresourcemanagersgraduatedtobeta": {
+      "title": "Kubernetes v1.37: Pod-Level Resource Managers graduated to Beta",
+      "summary": "Generated workflow post (2026-09-29)",
+      "tags": [
+        "devops",
+        "sre",
+        "kubernetes"
+      ],
+      "type": "workflow",
+      "slug": "kubernetesv137podlevelresourcemanagersgraduatedtobeta",
+      "date": "2026-09-29"
+    },
+    "kubernetesv137trackingwhenapersistentvolumeclaimwaslastusedbeta": {
+      "title": "Kubernetes v1.37: Tracking When a PersistentVolumeClaim Was Last Used (Beta)",
+      "summary": "Generated workflow post (2026-10-06)",
+      "tags": [
+        "devops",
+        "sre",
+        "kubernetes"
+      ],
+      "type": "workflow",
+      "slug": "kubernetesv137trackingwhenapersistentvolumeclaimwaslastusedbeta",
+      "date": "2026-10-06"
+    },
+    "deployoracledatabasestepbysteponamazonevswithfsxforontap": {
+      "title": "Deploy Oracle Database step by step on Amazon EVS with FSx for ONTAP",
+      "summary": "Generated workflow post (2026-10-13)",
+      "tags": [
+        "devops",
+        "sre",
+        "kubernetes"
+      ],
+      "type": "workflow",
+      "slug": "deployoracledatabasestepbysteponamazonevswithfsxforontap",
+      "date": "2026-10-13"
+    },
+    "amazonsagemakerjumpstart2026yeartodateinreview": {
+      "title": "Amazon SageMaker JumpStart: 2026 year-to-date in review",
+      "summary": "Generated workflow post (2026-10-20)",
+      "tags": [
+        "devops",
+        "sre",
+        "kubernetes"
+      ],
+      "type": "workflow",
+      "slug": "amazonsagemakerjumpstart2026yeartodateinreview",
+      "date": "2026-10-20"
     }
   },
   "insights": {
@@ -443,6 +527,110 @@
       "type": "insight",
       "slug": "aproductionlessononkafkaandeventstreamingreliability",
       "date": "2026-08-28"
+    },
+    "aproductionlessononobservabilitystrategyandopentelemetryinproduction": {
+      "title": "A production lesson on observability strategy and OpenTelemetry in production",
+      "summary": "Generated insight post (2026-09-04)",
+      "tags": [
+        "observability",
+        "sre",
+        "opentelemetry",
+        "monitoring"
+      ],
+      "type": "insight",
+      "slug": "aproductionlessononobservabilitystrategyandopentelemetryinproduction",
+      "date": "2026-09-04"
+    },
+    "aproductionlessonongitopsdriftandconfigurationmanagement": {
+      "title": "A production lesson on GitOps drift and configuration management",
+      "summary": "Generated insight post (2026-09-11)",
+      "tags": [
+        "gitops",
+        "kubernetes",
+        "devops",
+        "platformengineering"
+      ],
+      "type": "insight",
+      "slug": "aproductionlessonongitopsdriftandconfigurationmanagement",
+      "date": "2026-09-11"
+    },
+    "aproductionlessononsecretsmanagementandsecurityinplatformengineering": {
+      "title": "A production lesson on secrets management and security in platform engineering",
+      "summary": "Generated insight post (2026-09-18)",
+      "tags": [
+        "security",
+        "devops",
+        "kubernetes",
+        "platformengineering"
+      ],
+      "type": "insight",
+      "slug": "aproductionlessononsecretsmanagementandsecurityinplatformengineering",
+      "date": "2026-09-18"
+    },
+    "aproductionlessononcapacityplanningandautoscalingpatterns": {
+      "title": "A production lesson on capacity planning and autoscaling patterns",
+      "summary": "Generated insight post (2026-09-25)",
+      "tags": [
+        "sre",
+        "cloud",
+        "kubernetes",
+        "reliability"
+      ],
+      "type": "insight",
+      "slug": "aproductionlessononcapacityplanningandautoscalingpatterns",
+      "date": "2026-09-25"
+    },
+    "aproductionlessononpythonautomationforsreworkflows": {
+      "title": "A production lesson on Python automation for SRE workflows",
+      "summary": "Generated insight post (2026-10-02)",
+      "tags": [
+        "automation",
+        "python",
+        "sre",
+        "devops"
+      ],
+      "type": "insight",
+      "slug": "aproductionlessononpythonautomationforsreworkflows",
+      "date": "2026-10-02"
+    },
+    "aproductionlessonondistributedtracinganddebugginginmicroservices": {
+      "title": "A production lesson on distributed tracing and debugging in microservices",
+      "summary": "Generated insight post (2026-10-09)",
+      "tags": [
+        "observability",
+        "tracing",
+        "sre",
+        "microservices"
+      ],
+      "type": "insight",
+      "slug": "aproductionlessonondistributedtracinganddebugginginmicroservices",
+      "date": "2026-10-09"
+    },
+    "aproductionlessononincidentmanagementandoncallculture": {
+      "title": "A production lesson on incident management and on-call culture",
+      "summary": "Generated insight post (2026-10-16)",
+      "tags": [
+        "sre",
+        "reliability",
+        "oncall",
+        "devops"
+      ],
+      "type": "insight",
+      "slug": "aproductionlessononincidentmanagementandoncallculture",
+      "date": "2026-10-16"
+    },
+    "aproductionlessononplatformengineeringanddeveloperexperience": {
+      "title": "A production lesson on platform engineering and developer experience",
+      "summary": "Generated insight post (2026-10-23)",
+      "tags": [
+        "platformengineering",
+        "devops",
+        "sre",
+        "kubernetes"
+      ],
+      "type": "insight",
+      "slug": "aproductionlessononplatformengineeringanddeveloperexperience",
+      "date": "2026-10-23"
     }
   },
   "_meta": {
